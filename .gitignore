@@ -1,0 +1,186 @@
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio cache files
+.vs/
+*.njsproj.user
+*.npmignore
+*.pfx
+*.publishsettings
+node_modules/
+npm-debug.log
+package-lock.json
+# Visual Studio 2019 cache/options directory
+.vsconfig
+
+# Rider
+.idea/
+*.sln.iml
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Environment variables
+.env
+*.env.*
+!.env.example
+!.env.sample
+
+# IDE specific files
+*.bak
+*.tmp
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.[Cc]ert
+*.ntvs_analysis.dat
+*.csproj.user
+*.vbproj.user
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# Dotnet Build Tool
+project.lock.json
+project.assets.json
+*.nuget.props
+*.nuget.targets
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Rider CodeMaid configuration file
+*.sln.ide
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings
+*.DotSettings.user
+
+# TeamCity
+TeamCity.xml
+
+# DotCover
+*.dotCover
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# MSTest test Results
+[Tt]est[Rr]esults/
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-agent*.log
+nunit-server*.log
+
+# ILRepack
+ILRepack.List
+
+# FAKE - F# Make
+.fake/
+
+# Paket
+.paket/paket.exe
+paket-files/
+
+# Cake
+tools/**
+!tools/packages.config
+
+# Output files
+*.out
+
+# Folders containing locally generated files
+**/Generated/
+
+# Service Fabric
+*.sfproj.user
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Office Temp Files
+~$*
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Docker
+
+# Secrets
+secrets.json
+appsettings.Secret.json
