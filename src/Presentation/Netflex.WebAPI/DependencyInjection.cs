@@ -33,6 +33,19 @@ public static class DependencyInjection
         services.AddAuthentication(configuration);
         services.AddAuthorization();
 
+        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>()
+            ?? throw new NotConfiguredException("AllowedOrigins");
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.WithOrigins(allowedOrigins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
+
         return services;
     }
 
@@ -56,6 +69,8 @@ public static class DependencyInjection
             .WithApiVersionSet(versionSet)
             .AddEndpointFilter<CustomResponseFilter>()
             .MapCarter();
+
+        app.UseCors();
 
         return app;
     }
