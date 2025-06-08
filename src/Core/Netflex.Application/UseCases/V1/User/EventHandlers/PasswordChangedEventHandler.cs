@@ -1,7 +1,7 @@
 using Netflex.Application.UseCases.V1.Auth.Commands;
 using Netflex.Domain.Events;
 
-namespace Netflex.Application.UseCases.V1.Users.EventHandlers;
+namespace Netflex.Application.UseCases.V1.User.EventHandlers;
 
 public class PasswordChangedEventHandler(ILogger<PasswordChangedEventHandler> logger, ISender sender)
         : INotificationHandler<PasswordChangedEvent>

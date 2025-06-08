@@ -1,6 +1,6 @@
 using Netflex.Domain.Events;
 
-namespace Netflex.Application.UseCases.V1.Movies.EventHandlers;
+namespace Netflex.Application.UseCases.V1.Movie.EventHandlers;
 
 public class MovieCreatedEventHandler(ILogger<MovieCreatedEventHandler> logger, ISender sender)
         : INotificationHandler<MovieCreatedEvent>

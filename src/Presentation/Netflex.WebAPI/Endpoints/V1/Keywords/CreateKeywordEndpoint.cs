@@ -1,4 +1,4 @@
-using Netflex.Application.UseCases.V1.Keywords.Commands;
+using Netflex.Application.UseCases.V1.Keyword.Commands;
 
 namespace Netflex.WebAPI.Endpoints.V1.Keywords;
 
