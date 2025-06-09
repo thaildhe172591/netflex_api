@@ -22,21 +22,9 @@ public static class DependencyInjection
         var cacheConnection = configuration.GetConnectionString("Cache")
             ?? throw new NotConfiguredException("Cache");
 
-        services.Configure<JwtConfig>(
-            configuration.GetSection(nameof(JwtConfig)));
-
-        services.Configure<RefreshConfig>(
-            configuration.GetSection(nameof(RefreshConfig)));
-
         services.AddHealthChecks()
             .AddNpgSql(databaseConnection)
             .AddRedis(cacheConnection);
-
-        services.AddStackExchangeRedisCache(options => options.Configuration = cacheConnection);
-
-        services.AddPersistenceServices(databaseConnection)
-            .AddInfrastructureServices(cacheConnection)
-            .AddApplicationServices();
 
         services.AddCarter();
 

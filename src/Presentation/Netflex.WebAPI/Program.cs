@@ -2,7 +2,10 @@ using Netflex.Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddPersistenceServices(builder.Configuration)
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApplicationServices()
+    .AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 app.UseApiServices();

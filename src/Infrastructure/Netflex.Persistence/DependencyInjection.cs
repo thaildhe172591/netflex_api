@@ -5,14 +5,19 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using Npgsql;
+using Microsoft.Extensions.Configuration;
+using Netflex.Application.Exceptions;
 
 namespace Netflex.Persistence;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddPersistenceServices
-        (this IServiceCollection services, string databaseConnection)
+        (this IServiceCollection services, IConfiguration configuration)
     {
+        var databaseConnection = configuration.GetConnectionString("Database")
+            ?? throw new NotConfiguredException("Database");
+
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddHttpContextAccessor();

@@ -8,8 +8,17 @@ namespace Netflex.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices
-        (this IServiceCollection services, string cacheConnection)
+        (this IServiceCollection services, IConfiguration configuration)
     {
+        var cacheConnection = configuration.GetConnectionString("Cache")
+            ?? throw new NotConfiguredException("Cache");
+
+        services.Configure<JwtConfig>(
+            configuration.GetSection(nameof(JwtConfig)));
+
+        services.Configure<RefreshConfig>(
+            configuration.GetSection(nameof(RefreshConfig)));
+
         services.AddHttpClient();
         services.AddStackExchangeRedisCache(options =>
             options.Configuration = cacheConnection);
