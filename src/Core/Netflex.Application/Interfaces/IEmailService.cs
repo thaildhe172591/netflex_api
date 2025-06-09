@@ -1,10 +1,9 @@
 namespace Netflex.Application.Interfaces;
 
-public record EmailConfig(string Host, int Port, string Company,
-    string Username, string Password);
+public record EmailSettings(string Key, string OwnerMail, string Company);
 
 public interface IEmailService
 {
-    EmailConfig Config { get; }
+    EmailSettings Settings { get; }
     Task SendEmailAsync(string toEmail, string subject, string htmlContent, CancellationToken cancellationToken = default);
 }

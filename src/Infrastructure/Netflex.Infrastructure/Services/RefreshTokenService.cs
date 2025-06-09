@@ -3,13 +3,13 @@ using Netflex.Application.Interfaces;
 
 namespace Netflex.Infrastructure.Services;
 
-public record RefreshConfig
+public record RefreshSettings
 {
     public int ExpiresInDays { get; init; }
 };
 
-public class RefreshTokenService(IOptions<RefreshConfig> options) : IRefreshTokenService
+public class RefreshTokenService(IOptions<RefreshSettings> options) : IRefreshTokenService
 {
-    private readonly RefreshConfig _config = options.Value;
-    public int ExpiresInDays => _config.ExpiresInDays;
+    private readonly RefreshSettings _settings = options.Value;
+    public int ExpiresInDays => _settings.ExpiresInDays;
 }

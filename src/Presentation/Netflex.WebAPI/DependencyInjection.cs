@@ -84,8 +84,8 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthentication(
         this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtConfig = configuration.GetSection(nameof(JwtConfig)).Get<JwtConfig>()
-            ?? throw new NotConfiguredException(nameof(JwtConfig));
+        var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()
+            ?? throw new NotConfiguredException(nameof(JwtSettings));
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -93,11 +93,11 @@ public static class DependencyInjection
                 options.TokenValidationParameters = new()
                 {
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtConfig.Issuer,
-                    ValidAudience = jwtConfig.Audience,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
                     ClockSkew = TimeSpan.Zero,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtConfig.Key)),
+                        Encoding.UTF8.GetBytes(jwtSettings.Key)),
                 };
             });
         return services;

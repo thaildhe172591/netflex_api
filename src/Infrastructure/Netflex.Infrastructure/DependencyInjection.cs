@@ -13,11 +13,11 @@ public static class DependencyInjection
         var cacheConnection = configuration.GetConnectionString("Cache")
             ?? throw new NotConfiguredException("Cache");
 
-        services.Configure<JwtConfig>(
-            configuration.GetSection(nameof(JwtConfig)));
+        services.Configure<JwtSettings>(
+            configuration.GetSection(nameof(JwtSettings)));
 
-        services.Configure<RefreshConfig>(
-            configuration.GetSection(nameof(RefreshConfig)));
+        services.Configure<RefreshSettings>(
+            configuration.GetSection(nameof(RefreshSettings)));
 
         services.AddHttpClient();
         services.AddStackExchangeRedisCache(options =>

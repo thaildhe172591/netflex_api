@@ -2,7 +2,7 @@ using Netflex.Shared.Exceptions;
 
 namespace Netflex.Infrastructure.Exceptions;
 
-public class FailedSendEmailException(string subject)
+public class EmailNotSentException(string subject)
     : InternalServerException($"Failed to send email: {subject}")
 {
 }

@@ -23,7 +23,7 @@ public class SendOTPHandler(IEmailService emailService,
     public async Task<Unit> Handle(SendOTPCommand request, CancellationToken cancellationToken)
     {
         var otp = await _otpGenerator.GenerateOTPAsync(request.Email, cancellationToken);
-        var company = _emailService.Config.Company;
+        var company = _emailService.Settings.Company;
         var html = _templateService.GenerateOTPEmail(otp, company);
         await _emailService.SendEmailAsync(request.Email, $"{company} OTP Verification", html, cancellationToken);
         return Unit.Value;

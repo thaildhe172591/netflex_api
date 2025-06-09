@@ -19,6 +19,11 @@ services:
 
     webapi:
       container_name: netflex-api-prod
+      environment: 
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_HTTP_PORTS=8080
+        - ConnectionStrings__Cache=cache:6379
+        - ConnectionStrings__Database=Server=db;Port=5432;Database=netflex;User Id=postgres;Password=postgres;Include Error Detail=true
       env_file:
         - .env
       depends_on:
