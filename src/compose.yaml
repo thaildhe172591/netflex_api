@@ -1,15 +1,15 @@
 services:
-  netflexcache:
-    image: redis
+  cache:
+    image: redis:latest
 
-  netflexdb:
-    image: postgres
+  db:
+    image: postgres:latest
 
-  netflex.api:
-    image: ${DOCKER_REGISTRY-}netflexapi
+  webapi:
+    image: ${DOCKER_REGISTRY-}netflex-api
     build:
       context: .
       dockerfile: Presentation/Netflex.WebAPI/Dockerfile
 
 volumes:
-  postgres_database:
+  db-data:

@@ -8,21 +8,11 @@ namespace Netflex.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices
-        (this IServiceCollection services, IConfiguration configuration)
+        (this IServiceCollection services, string cacheConnection)
     {
         services.AddHttpClient();
-
-        var redisConnectionString = configuration.GetConnectionString("Cache")
-            ?? throw new NotConfiguredException("Cache");
-
         services.AddStackExchangeRedisCache(options =>
-            options.Configuration = redisConnectionString);
-
-        services.Configure<JwtConfig>(
-            configuration.GetSection(nameof(JwtConfig)));
-
-        services.Configure<RefreshConfig>(
-            configuration.GetSection(nameof(RefreshConfig)));
+            options.Configuration = cacheConnection);
 
         services.AddSingleton<ISlugGenerator, SlugGenerator>();
 

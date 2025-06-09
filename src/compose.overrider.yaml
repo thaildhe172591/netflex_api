@@ -1,31 +1,31 @@
 services:
-    netflexcache:
-      container_name: netflexcache
+    cache:
+      container_name: netflex-cache-prod
       restart: always
       ports:
         - "6379:6379"
 
-    netflexdb:
-      container_name: netflexdb
+    db:
+      container_name: netflex-db-prod
       environment:
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
-        - POSTGRES_DB=netflex_dev
+        - POSTGRES_DB=netflex
       restart: always
       ports:
         - "5432:5432"
       volumes:
-        - postgres_database:/var/lib/postgresql/data/
+        - db-data:/var/lib/postgresql/data/
 
-    netflex.api:
+    webapi:
+      container_name: netflex-api-prod
       env_file:
         - .env
       depends_on:
-        - netflexdb
-        - netflexcache
+        - db
+        - cache
       ports:
-        - "6000:6000"
-        - "6060:6060"
+        - "6000:8080"
       volumes:
         - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
         - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
