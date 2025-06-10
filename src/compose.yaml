@@ -1,12 +1,15 @@
 services:
+  mq:
+    image: rabbitmq:management
+
   cache:
     image: redis:latest
 
   db:
     image: postgres:latest
 
-  webapi:
-    image: ${DOCKER_REGISTRY-}netflex-api
+  api:
+    image: ${DOCKER_REGISTRY:+${DOCKER_REGISTRY}/}${OWNER:+${OWNER}/}netflex-api:latest
     build:
       context: .
       dockerfile: Presentation/Netflex.WebAPI/Dockerfile
