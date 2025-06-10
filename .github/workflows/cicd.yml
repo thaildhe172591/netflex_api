@@ -37,6 +37,8 @@ jobs:
           file: ./src/Presentation/Netflex.WebAPI/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/netflex-api:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy:
     needs: build
