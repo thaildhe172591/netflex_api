@@ -1,4 +1,4 @@
-name: Netflex CICD
+name: Netflex Build and Deploy
 
 on:
   push:
