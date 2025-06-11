@@ -30,9 +30,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Calculate short SHA
         run: echo "GITHUB_SHA_SHORT=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
@@ -45,8 +42,6 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/netflex-api:latest
             ghcr.io/${{ github.repository_owner }}/netflex-api:${{ env.GITHUB_SHA_SHORT }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   deploy:
     needs: build
@@ -63,4 +58,4 @@ jobs:
             docker pull ghcr.io/${{ github.repository_owner }}/netflex-api:latest
             cd ./netflex
             docker compose -f compose.yaml -f compose.override.yaml up -d --no-deps --build api
-            docker image prune --filter "until=24h"
+            docker image prune -a --filter "until=24h"
