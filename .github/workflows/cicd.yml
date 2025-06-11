@@ -63,4 +63,4 @@ jobs:
             docker pull ghcr.io/${{ github.repository_owner }}/netflex-api:latest
             cd ./netflex
             docker compose -f compose.yaml -f compose.override.yaml up -d --no-deps --build api
-            docker system prune --filter "until=24h"
+            docker image prune --filter "until=24h"
