@@ -11,7 +11,7 @@ public class GetKeywordsEndpoint : ICarterModule
     {
         app.MapGet("/keywords", ([AsParameters] GetKeywordsRequest request) =>
         {
-            return Results.Ok("Keywords");
+            return Results.Ok(request);
         })
         .MapToApiVersion(1)
         .WithName(nameof(GetKeywordsEndpoint));
