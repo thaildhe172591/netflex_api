@@ -42,3 +42,11 @@ services:
         - "6000:8080"
       volumes:
         - ~/.aspnet/https:/https:ro
+
+    watchtower:
+      container_name: watchtower
+      environment:
+        - WATCHTOWER_CLEANUP=true
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      command: --interval 30 netflex-api-prod

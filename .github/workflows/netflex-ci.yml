@@ -1,4 +1,4 @@
-name: Netflex Build and Deploy
+name: Netflex CI
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   build-and-push:
+    name: build && push image
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/netflex-api
@@ -40,20 +41,3 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH and Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            docker pull ghcr.io/${{ github.repository_owner }}/netflex-api:latest
-            cd ./netflex
-            docker compose -f compose.yaml -f compose.override.yaml up -d --no-deps --build api
-            docker image prune -a --filter "until=24h"

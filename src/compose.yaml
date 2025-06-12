@@ -9,10 +9,13 @@ services:
     image: postgres:latest
 
   api:
-    image: ${DOCKER_REGISTRY:+${DOCKER_REGISTRY}/}${OWNER:+${OWNER}/}netflex-api:latest
+    image: ghcr.io/ngoxuanbac/netflex-api:latest
     build:
       context: .
       dockerfile: Presentation/Netflex.WebAPI/Dockerfile
+
+  watchtower:
+    image: containrrr/watchtower:latest
 
 volumes:
   db-data:
