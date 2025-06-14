@@ -35,6 +35,7 @@ public static class DependencyInjection
             .AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>))
             .AddTransient<IUserRepository, UserRepository>();
 
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         services.Decorate<IUserRepository, CachedUserRepository>();
 
         return services;

@@ -16,28 +16,28 @@ public class BaseRepository<T>(ApplicationDbContext dbContext)
     public async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         => await _dbContext.AddRangeAsync(entities, cancellationToken);
 
-    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<T>().AsNoTracking().AnyAsync(expression, cancellationToken);
+        return await _dbContext.Set<T>().AsNoTracking().AnyAsync(predicate, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? expression,
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbContext.Set<T>();
         query = include is null ? query : include(query);
-        query = expression is null ? query : query.Where(expression);
+        query = predicate is null ? query : query.Where(predicate);
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<T?> GetAsync(Expression<Func<T, bool>> expression,
+    public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbContext.Set<T>();
         query = include is null ? query : include(query);
-        return await query.FirstOrDefaultAsync(expression, cancellationToken);
+        return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public void Remove(T entity)
