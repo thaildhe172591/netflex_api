@@ -1,17 +1,19 @@
+using Netflex.Application.UseCases.V1.Keyword.Queries;
 using Netflex.Shared.Pagination;
 
 namespace Netflex.WebAPI.Endpoints.V1.Keywords;
 
-public record GetKeywordsRequest(string? Query, string? OrderBy) : PaginationRequest;
-public record GetKeywordsResponse(PaginatedResult<string> Keywords);
+public record GetKeywordsRequest(string? Query, string? OrderBy, int PageIndex = 0, int PageSize = 10)
+    : PaginationRequest(PageIndex, PageSize);
 
 public class GetKeywordsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/keywords", ([AsParameters] GetKeywordsRequest request) =>
+        app.MapGet("/keywords", async ([AsParameters] GetKeywordsRequest request, ISender sender) =>
         {
-            return Results.Ok(request);
+            var result = await sender.Send(request.Adapt<GetKeywordsQuery>());
+            return Results.Ok(result);
         })
         .MapToApiVersion(1)
         .WithName(nameof(GetKeywordsEndpoint));

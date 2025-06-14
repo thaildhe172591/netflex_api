@@ -24,8 +24,7 @@ public class AccessTokenValidationMiddleware(RequestDelegate next)
             if (!string.IsNullOrEmpty(accessJti))
             {
                 var isRevoked = await tokenService.IsRevokedAsync(accessJti);
-                if (isRevoked)
-                    throw new AccessTokenRevokedExceptions();
+                if (isRevoked) throw new AccessTokenRevokedExceptions();
             }
 
             var emailVerified = context.User.FindFirst(JwtRegisteredClaimNames.EmailVerified)?.Value;

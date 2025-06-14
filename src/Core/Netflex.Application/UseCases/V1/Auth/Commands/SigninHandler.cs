@@ -19,19 +19,21 @@ public class SigninCommandValidator
     }
 }
 
-public class SigninHandler(IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService,
+public class SigninHandler(IJwtTokenService jwtTokenService, IRefreshOptions refreshOptions,
     IUnitOfWork unitOfWork) : ICommandHandler<SigninCommand, SigninResult>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
-    private readonly IRefreshTokenService _refreshTokenService = refreshTokenService;
+    private readonly IRefreshOptions _refreshOptions = refreshOptions;
     public async Task<SigninResult> Handle(SigninCommand request,
         CancellationToken cancellationToken)
     {
         //STEP 1: Check user credentials 
-        var user = await _unitOfWork.Repository<Domain.Entities.User>().Entities.Include(u => u.Roles)
-            .FirstOrDefaultAsync(u => u.Email == Email.Of(request.Email), cancellationToken)
-                ?? throw new IncorrectEmailOrPasswordException();
+        var user = await _unitOfWork.Repository<Domain.Entities.User>()
+            .GetAsync(u => u.Email == Email.Of(request.Email),
+                q => q.Include(u => u.Roles).Include(u => u.Permissions),
+                cancellationToken: cancellationToken)
+            ?? throw new IncorrectEmailOrPasswordException();
 
         if (user.PasswordHash is null || !user.PasswordHash.Verify(request.Password))
             throw new IncorrectEmailOrPasswordException();
@@ -41,9 +43,9 @@ public class SigninHandler(IJwtTokenService jwtTokenService, IRefreshTokenServic
 
         var userSessionRepository = _unitOfWork.Repository<UserSession>();
         var userSession = await userSessionRepository.GetAsync(x => x.UserId == user.Id
-            && x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken);
+            && x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken: cancellationToken);
 
-        var expiresAt = DateTime.UtcNow.AddDays(_refreshTokenService.ExpiresInDays);
+        var expiresAt = DateTime.UtcNow.AddDays(_refreshOptions.ExpiresInDays);
 
         //STEP 3: If session is existed, update session with new refresh token
         if (userSession is not null)

@@ -12,6 +12,7 @@ public class PasswordChangedEventHandler(ILogger<PasswordChangedEventHandler> lo
     public async Task Handle(PasswordChangedEvent domainEvent, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Domain Event handled: {DomainEvent}", nameof(PasswordChangedEvent));
-        await _sender.Send(new RevokeAllExceptCommand(domainEvent.User.Id, domainEvent.SessionId), cancellationToken);
+
+        await _sender.Send(new RevokeSessionsCommand(domainEvent.User.Id, domainEvent.SessionId), cancellationToken);
     }
 }

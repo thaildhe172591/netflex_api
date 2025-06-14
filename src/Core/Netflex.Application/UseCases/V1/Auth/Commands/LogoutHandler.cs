@@ -14,7 +14,7 @@ public class LogoutHandler(IUnitOfWork unitOfWork, IJwtTokenService tokenService
     {
         //STEP 1: Get current session 
         var userSession = await _unitOfWork.Repository<UserSession>()
-            .GetAsync(x => x.UserId == request.UserId && x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken)
+            .GetAsync(x => x.UserId == request.UserId && x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(UserSession), new { request.UserId, request.DeviceId });
 
         //STEP 2: Revoke refresh token and access token

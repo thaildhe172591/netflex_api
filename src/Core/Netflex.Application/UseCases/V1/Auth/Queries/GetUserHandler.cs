@@ -1,5 +1,4 @@
 using System.Data;
-using Netflex.Application.DTOs;
 using Dapper;
 
 namespace Netflex.Application.UseCases.V1.Auth.Queries;

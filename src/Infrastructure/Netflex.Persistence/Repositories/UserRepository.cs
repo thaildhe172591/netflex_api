@@ -8,7 +8,8 @@ public class UserRepository(ApplicationDbContext dbContext)
 {
     public async Task<int> GetVersionByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken)
+        var user = await _dbContext.Users.AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken)
             ?? throw new UserNotFoundException();
         return user.Version;
     }

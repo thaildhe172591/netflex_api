@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Netflex.Domain.Entities;
 using Netflex.Domain.ValueObjects;
 
@@ -11,25 +10,26 @@ public record RefreshCommand(string DeviceId, string RefreshToken)
 public record RefreshResult(string AccessToken, string RefreshToken);
 
 public class RefreshHandler(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenService,
-    IRefreshTokenService refreshTokenService)
+    IRefreshOptions refreshOptions)
         : ICommandHandler<RefreshCommand, RefreshResult>
 {
     private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
-    private readonly IRefreshTokenService _refreshTokenService = refreshTokenService;
+    private readonly IRefreshOptions _refreshOptions = refreshOptions;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     public async Task<RefreshResult> Handle(RefreshCommand request, CancellationToken cancellationToken)
     {
         //STEP 1: Get session by refresh token
         var sessions = await _unitOfWork.Repository<UserSession>()
-            .GetAllAsync(x => x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken);
+            .GetAllAsync(x => x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken: cancellationToken);
 
         var userSession = sessions.FirstOrDefault(s => s.RefreshHash.Verify(request.RefreshToken));
         if (userSession is null || !userSession.IsValid(DateTime.UtcNow))
             throw new InvalidRefreshTokenException();
 
-        var user = await _unitOfWork.Repository<Domain.Entities.User>().Entities
-            .Include(u => u.Roles).Include(u => u.Permissions)
-            .FirstOrDefaultAsync(x => x.Id == userSession.UserId, cancellationToken)
+        var user = await _unitOfWork.Repository<Domain.Entities.User>()
+            .GetAsync(x => x.Id == userSession.UserId,
+                q => q.Include(u => u.Roles).Include(u => u.Permissions),
+                cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 
         //STEP 2: Create new access token and new refresh token
@@ -37,7 +37,7 @@ public class RefreshHandler(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenSer
         var refreshToken = Guid.NewGuid().ToString();
 
         userSession.RefreshHash = HashString.Of(refreshToken);
-        userSession.ExpiresAt = DateTime.UtcNow.AddDays(_refreshTokenService.ExpiresInDays);
+        userSession.ExpiresAt = DateTime.UtcNow.AddDays(_refreshOptions.ExpiresInDays);
 
         await _unitOfWork.CommitAsync();
         return new RefreshResult(acccessToken, refreshToken);

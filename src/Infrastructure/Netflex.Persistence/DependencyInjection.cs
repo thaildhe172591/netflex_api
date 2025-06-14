@@ -31,9 +31,6 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IDbConnection>(sp => new NpgsqlConnection(databaseConnection));
-
-        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-
         services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork))
             .AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>))
             .AddTransient<IUserRepository, UserRepository>();

@@ -8,50 +8,34 @@ public class BaseRepository<T>(ApplicationDbContext dbContext)
     : IBaseRepository<T> where T : class, IEntity
 {
     protected readonly ApplicationDbContext _dbContext = dbContext;
-    private readonly DbSet<T> _entitiySet = dbContext.Set<T>();
-    public DbSet<T> Entities => _entitiySet;
-    public void Add(T entity)
-              => _dbContext.Add(entity);
-
     public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         => await _dbContext.AddAsync(entity, cancellationToken);
-
-
-    public void AddRange(IEnumerable<T> entities)
-        => _dbContext.AddRange(entities);
-
 
     public async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         => await _dbContext.AddRangeAsync(entities, cancellationToken);
 
     public async Task<bool> ExistsAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
     {
-        return await _entitiySet.AnyAsync(expression, cancellationToken);
+        return await _dbContext.Set<T>().AsNoTracking().AnyAsync(expression, cancellationToken);
     }
 
-    public T? Get(Expression<Func<T, bool>> expression)
-        => _entitiySet.FirstOrDefault(expression);
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? expression, Func<IQueryable<T>, IQueryable<T>>? include = default,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _dbContext.Set<T>();
+        query = include is null ? query : include(query);
+        query = expression is null ? query : query.Where(expression);
+        return await query.ToListAsync(cancellationToken);
+    }
 
+    public async Task<T?> GetAsync(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IQueryable<T>>? include = default,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _dbContext.Set<T>();
+        query = include is null ? query : include(query);
+        return await query.FirstOrDefaultAsync(expression, cancellationToken);
 
-    public IEnumerable<T> GetAll()
-        => _entitiySet.AsEnumerable();
-
-
-    public IEnumerable<T> GetAll(Expression<Func<T, bool>> expression)
-        => _entitiySet.Where(expression).AsEnumerable();
-
-
-    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
-        => await _entitiySet.ToListAsync(cancellationToken);
-
-
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
-        => await _entitiySet.Where(expression).ToListAsync(cancellationToken);
-
-
-    public async Task<T?> GetAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
-        => await _entitiySet.FirstOrDefaultAsync(expression, cancellationToken);
-
+    }
 
     public void Remove(T entity)
         => _dbContext.Remove(entity);

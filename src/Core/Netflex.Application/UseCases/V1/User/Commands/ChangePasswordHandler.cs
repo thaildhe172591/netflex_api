@@ -23,7 +23,7 @@ public class ChangePasswordHandler(IUnitOfWork unitOfWork)
         CancellationToken cancellationToken)
     {
         var userRepository = _unitOfWork.Repository<Domain.Entities.User>();
-        var user = await userRepository.GetAsync(u => u.Id == request.UserId, cancellationToken)
+        var user = await userRepository.GetAsync(u => u.Id == request.UserId, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 
         if (user.PasswordHash is null || !user.PasswordHash.Verify(request.OldPassword))

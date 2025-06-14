@@ -3,7 +3,7 @@ using System.Reflection;
 namespace Netflex.Persistence;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : DbContext(options), IApplicationDbContext
+    : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<UserSession> UserTokens => Set<UserSession>();

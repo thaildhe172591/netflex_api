@@ -1,6 +1,5 @@
 using Netflex.Domain.ValueObjects;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
 namespace Netflex.Application.UseCases.V1.User.Commands;
 
@@ -29,8 +28,7 @@ public class CreateUserHandler(IUnitOfWork unitOfWork)
         CancellationToken cancellationToken)
     {
         var userRepository = _unitOfWork.Repository<Domain.Entities.User>();
-        var userExists = await userRepository.Entities.AsNoTracking()
-            .AnyAsync(u => u.Email == Email.Of(request.Email), cancellationToken);
+        var userExists = await userRepository.ExistsAsync(u => u.Email == Email.Of(request.Email), cancellationToken);
 
         if (userExists) throw new EmailAlreadyExistsException();
 

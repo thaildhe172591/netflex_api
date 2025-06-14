@@ -27,8 +27,7 @@ public static class DependencyInjection
 
         services.AddScoped<IEmailService, EmailService>()
             .AddScoped<IOTPGenerator, OTPGenerator>()
-            .AddScoped<ITemplateService, TemplateService>()
-            .AddScoped<IRefreshTokenService, RefreshTokenService>()
+            .AddScoped<IRefreshOptions, RefreshOptions>()
             .AddScoped<IJwtTokenService, JwtTokenService>();
 
         services.AddScoped<ISocialLoginService, GoogleLoginService>()

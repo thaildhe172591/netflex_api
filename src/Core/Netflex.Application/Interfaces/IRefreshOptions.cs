@@ -1,6 +1,6 @@
 namespace Netflex.Application.Interfaces;
 
-public interface IRefreshTokenService
+public interface IRefreshOptions
 {
     int ExpiresInDays { get; }
 }

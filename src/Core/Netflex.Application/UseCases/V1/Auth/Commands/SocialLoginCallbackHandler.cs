@@ -22,13 +22,13 @@ public class SocialLoginCallbackCommandValidator
     }
 }
 public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenService,
-    IRefreshTokenService refreshTokenService, ISocialLoginServiceFactory socialLoginServiceFactory)
+    IRefreshOptions refreshOptions, ISocialLoginServiceFactory socialLoginServiceFactory)
     : ICommandHandler<SocialLoginCallbackCommand, SocialLoginCallbackResult>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly ISocialLoginServiceFactory _socialLoginServiceFactory = socialLoginServiceFactory;
     private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
-    private readonly IRefreshTokenService _refreshTokenService = refreshTokenService;
+    private readonly IRefreshOptions _refreshOptions = refreshOptions;
     public async Task<SocialLoginCallbackResult> Handle(SocialLoginCallbackCommand request,
         CancellationToken cancellationToken)
     {
@@ -42,15 +42,14 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
 
         var userLogin = await userLoginRepository.GetAsync(ul =>
                 ul.ProviderKey == info.Id
-                    && ul.LoginProvider == LoginProvider.Of(request.LoginProvider), cancellationToken);
+                    && ul.LoginProvider == LoginProvider.Of(request.LoginProvider), cancellationToken: cancellationToken);
 
         var userId = userLogin?.UserId ?? Guid.NewGuid().ToString();
 
         //STEP 2: Check user login is exist or not. if user login is not, create new user and new user login. 
         if (userLogin is null)
         {
-            var userExists = await userRepository.Entities
-                .AnyAsync(u => u.Email == Email.Of(info.Email), cancellationToken);
+            var userExists = await userRepository.ExistsAsync(u => u.Email == Email.Of(info.Email), cancellationToken);
             if (userExists) throw new EmailAlreadyExistsException();
 
             var newUser = Domain.Entities.User.Create(userId, Email.Of(info.Email));
@@ -67,9 +66,9 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
 
         var userSessionRepository = _unitOfWork.Repository<UserSession>();
         var userSession = await userSessionRepository.GetAsync(x => x.UserId == userId
-            && x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken);
+            && x.DeviceId == request.DeviceId && !x.IsRevoked, cancellationToken: cancellationToken);
 
-        var expiresAt = DateTime.UtcNow.AddDays(_refreshTokenService.ExpiresInDays);
+        var expiresAt = DateTime.UtcNow.AddDays(_refreshOptions.ExpiresInDays);
 
         if (userSession is not null)
         {
@@ -85,8 +84,11 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
             await userSessionRepository.AddAsync(userSession, cancellationToken);
         }
 
-        var user = await _unitOfWork.Repository<Domain.Entities.User>().Entities.Include(u => u.Roles).Include(u => u.Permissions)
-            .FirstOrDefaultAsync(x => x.Id == userSession.UserId, cancellationToken) ?? throw new UserNotFoundException();
+        var user = await _unitOfWork.Repository<Domain.Entities.User>()
+            .GetAsync(x => x.Id == userSession.UserId,
+                q => q.Include(u => u.Roles).Include(u => u.Permissions),
+                cancellationToken: cancellationToken)
+            ?? throw new UserNotFoundException();
 
         var accessToken = _jwtTokenService.GenerateJwt(user, userSession.Id);
 
