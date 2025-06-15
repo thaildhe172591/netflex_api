@@ -1,17 +1,13 @@
 using System.Data;
 using Dapper;
+using Netflex.Application.DTOs;
+using Netflex.Application.Interfaces.Repositories;
+namespace Netflex.Persistence.Repositories;
 
-namespace Netflex.Application.UseCases.V1.Auth.Queries;
-
-public record GetUserQuery(string UserId) : IQuery<GetUserResult>;
-public record GetUserResult(UserDTO User);
-
-public class GetUserHandler(IDbConnection connection)
-    : IQueryHandler<GetUserQuery, GetUserResult>
+public class UserReadOnlyRepository(IDbConnection connection)
+    : ReadOnlyRepository<User>(connection), IUserReadOnlyRepository
 {
-    private readonly IDbConnection _connection = connection;
-
-    public async Task<GetUserResult> Handle(GetUserQuery request, CancellationToken cancellationToken)
+    public async Task<UserDetailDTO?> GetUserDetailAsync(string userId)
     {
         const string sql = @"
             SELECT 
@@ -27,13 +23,12 @@ public class GetUserHandler(IDbConnection connection)
             GROUP BY u.email";
 
         var result = await _connection.QueryFirstOrDefaultAsync<(string Email, string Roles, string Permissions)>(
-            sql, new { Id = request.UserId });
+            sql, new { Id = userId });
 
-        if (result == default) throw new UserNotFoundException();
+        if (result == default) return null;
 
         var roles = result.Roles.Split(',', StringSplitOptions.RemoveEmptyEntries);
         var permissions = result.Permissions.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-        return new GetUserResult(new UserDTO(result.Email, roles, permissions));
+        return new UserDetailDTO(result.Email, roles, permissions);
     }
 }

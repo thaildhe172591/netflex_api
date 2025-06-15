@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query;
 using Netflex.Application.Interfaces.Repositories;
 using Netflex.Domain.Entities.Abstractions;
 
@@ -8,50 +7,58 @@ namespace Netflex.Persistence.Repositories;
 public class BaseRepository<T>(ApplicationDbContext dbContext)
     : IBaseRepository<T> where T : class, IEntity
 {
-    public DbSet<T> Entities => _dbContext.Set<T>();
     protected readonly ApplicationDbContext _dbContext = dbContext;
-    public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
+    public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         => await _dbContext.AddAsync(entity, cancellationToken);
 
-    public async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public virtual async Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         => await _dbContext.AddRangeAsync(entities, cancellationToken);
 
-    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Set<T>().AsNoTracking().AnyAsync(predicate, cancellationToken);
-    }
+    public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        => await _dbContext.Set<T>().AsNoTracking().AnyAsync(predicate, cancellationToken);
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+    public T? Get(object id) => _dbContext.Set<T>().Find(id);
+
+    public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate,
+        string? includeProperties = default, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = default,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbContext.Set<T>();
-        query = include is null ? query : include(query);
-        query = predicate is null ? query : query.Where(predicate);
+        if (predicate != null) query = query.Where(predicate);
+
+        if (includeProperties != null)
+        {
+            foreach (var property in includeProperties.Split([','], StringSplitOptions.RemoveEmptyEntries))
+                query = query.Include(property);
+        }
+        if (orderBy != null) query = orderBy(query);
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+    public virtual async Task<T?> GetAsync(Expression<Func<T, bool>> predicate,
+        string? includeProperties = default,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbContext.Set<T>();
-        query = include is null ? query : include(query);
-        return await query.FirstOrDefaultAsync(predicate, cancellationToken);
+        if (predicate != null) query = query.Where(predicate);
+
+        if (includeProperties != null)
+        {
+            foreach (var property in includeProperties.Split([','], StringSplitOptions.RemoveEmptyEntries))
+                query = query.Include(property);
+        }
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
-    public void Remove(T entity)
+    public virtual void Remove(T entity)
         => _dbContext.Remove(entity);
 
-
-    public void RemoveRange(IEnumerable<T> entities)
+    public virtual void RemoveRange(IEnumerable<T> entities)
         => _dbContext.RemoveRange(entities);
 
-
-    public void Update(T entity)
+    public virtual void Update(T entity)
         => _dbContext.Update(entity);
 
-
-    public void UpdateRange(IEnumerable<T> entities)
+    public virtual void UpdateRange(IEnumerable<T> entities)
         => _dbContext.UpdateRange(entities);
 }

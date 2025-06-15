@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using Netflex.Application.Exceptions;
-using Netflex.Application.UseCases.V1.Auth.Queries;
+using Netflex.Application.UseCases.V1.User.Queries;
 
 namespace Netflex.WebAPI.Endpoints.V1.Auth;
 
@@ -13,7 +13,7 @@ public class MeEndpoint : ICarterModule
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new NotAuthenticatedException();
 
-            var result = await sender.Send(new GetUserQuery(userId));
+            var result = await sender.Send(new GetUserDetailQuery(userId));
             return Results.Ok(result.User);
         })
         .RequireAuthorization()

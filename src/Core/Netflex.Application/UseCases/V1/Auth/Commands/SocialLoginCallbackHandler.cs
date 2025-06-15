@@ -1,5 +1,4 @@
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Netflex.Domain.Entities;
 using Netflex.Domain.ValueObjects;
 
@@ -86,7 +85,7 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
 
         var user = await _unitOfWork.Repository<Domain.Entities.User>()
             .GetAsync(x => x.Id == userSession.UserId,
-                q => q.Include(u => u.Roles).Include(u => u.Permissions),
+                includeProperties: nameof(Domain.Entities.User.Roles) + "," + nameof(Domain.Entities.User.Permissions),
                 cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 
