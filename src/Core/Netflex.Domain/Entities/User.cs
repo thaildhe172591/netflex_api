@@ -31,4 +31,6 @@ public class User : Aggregate<string>
         AddDomainEvent(new PasswordChangedEvent(this, sessionId));
     }
 
+    public void AssignRole(Role role) => Roles.Add(role);
+
 }

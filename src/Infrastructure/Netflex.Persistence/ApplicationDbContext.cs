@@ -7,6 +7,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<UserSession> UserTokens => Set<UserSession>();
+    public DbSet<Role> Roles => Set<Role>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

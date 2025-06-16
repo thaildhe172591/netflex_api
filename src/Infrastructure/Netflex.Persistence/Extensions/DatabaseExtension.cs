@@ -7,16 +7,19 @@ public static class DatabaseExtension
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
         context.Database.MigrateAsync().GetAwaiter().GetResult();
-
         await SeedAsync(context);
     }
 
     private static async Task SeedAsync(ApplicationDbContext context)
     {
-        await Task.CompletedTask;
+        if (!context.Roles.Any())
+        {
+            context.Roles.Add(Role.Create(Guid.NewGuid().ToString(), "Admin"));
+            context.Roles.Add(Role.Create(Guid.NewGuid().ToString(), "Moderator"));
+            context.Roles.Add(Role.Create(Guid.NewGuid().ToString(), "User"));
+            await context.SaveChangesAsync();
+        }
     }
 }
