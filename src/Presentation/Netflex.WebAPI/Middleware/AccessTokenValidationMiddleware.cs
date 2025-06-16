@@ -29,7 +29,9 @@ public class AccessTokenValidationMiddleware(RequestDelegate next)
 
             var emailVerified = context.User.FindFirst(JwtRegisteredClaimNames.EmailVerified)?.Value;
             if (!bool.TryParse(emailVerified, out var isEmailVerified) || !isEmailVerified)
-                throw new EmailNotVerifiedException();
+            {
+                throw new EmailNotVerifiedException(ClaimTypes.Email);
+            }
 
             if (!string.IsNullOrEmpty(userId))
             {
