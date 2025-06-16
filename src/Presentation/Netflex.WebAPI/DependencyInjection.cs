@@ -1,5 +1,4 @@
 using Netflex.Shared.Exceptions.Handler;
-using Netflex.Shared.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Netflex.Application.Exceptions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -73,7 +72,6 @@ public static class DependencyInjection
 
         app.MapGroup(API_PREFIX)
             .WithApiVersionSet(versionSet)
-            .AddEndpointFilter<CustomResponseFilter>()
             .MapCarter();
 
         app.UseCors();

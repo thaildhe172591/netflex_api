@@ -1,5 +1,4 @@
-﻿using Netflex.Shared.Filters;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -70,7 +69,7 @@ public class CustomExceptionHandler
             problemDetails.Extensions.Add("errors", validationException.Errors);
         }
 
-        await context.Response.WriteAsJsonAsync(new Failure(problemDetails), cancellationToken: cancellationToken);
+        await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken: cancellationToken);
         return true;
     }
 }
