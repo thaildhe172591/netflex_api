@@ -20,6 +20,7 @@ public class AccessTokenValidationMiddleware(RequestDelegate next)
             var accessJti = context.User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var version = context.User.FindFirst(CustomClaimNames.Version)?.Value ?? "0";
+            var email = context.User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
             if (!string.IsNullOrEmpty(accessJti))
             {
@@ -30,7 +31,7 @@ public class AccessTokenValidationMiddleware(RequestDelegate next)
             var emailVerified = context.User.FindFirst(JwtRegisteredClaimNames.EmailVerified)?.Value;
             if (!bool.TryParse(emailVerified, out var isEmailVerified) || !isEmailVerified)
             {
-                throw new EmailNotVerifiedException(ClaimTypes.Email);
+                throw new EmailNotVerifiedException(email);
             }
 
             if (!string.IsNullOrEmpty(userId))
