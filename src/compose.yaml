@@ -1,0 +1,18 @@
+services:
+  mq:
+    image: rabbitmq:management
+
+  cache:
+    image: redis:latest
+
+  db:
+    image: postgres:latest
+
+  api:
+    image: netflex-api
+    build:
+      context: .
+      dockerfile: Presentation/Netflex.WebAPI/Dockerfile
+
+volumes:
+  netflex-data:

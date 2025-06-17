@@ -58,7 +58,7 @@ public static class DependencyInjection
     {
         app.UseAuthorization();
         app.UseExceptionHandler(options => { });
-        app.UseMiddleware<AccessTokenValidationMiddleware>();
+        app.UseAccessTokenValidation();
         app.UseHealthChecks("/health",
             new HealthCheckOptions
             {

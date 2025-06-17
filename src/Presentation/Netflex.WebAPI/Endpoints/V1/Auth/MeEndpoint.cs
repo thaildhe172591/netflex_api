@@ -17,6 +17,7 @@ public class MeEndpoint : ICarterModule
             return Results.Ok(result.User);
         })
         .RequireAuthorization()
+        .RequireEmailVerified()
         .MapToApiVersion(1)
         .WithName(nameof(MeEndpoint));
     }
