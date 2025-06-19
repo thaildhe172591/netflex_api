@@ -8,7 +8,7 @@ public class SocialLoginEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/{loginProvider}", async (string loginProvider,
+        app.MapGet("/auth/{loginProvider}", async (string loginProvider,
             [AsParameters] SocialLoginRequest request, ISender sender) =>
         {
             var result = await sender.Send(new GetSocialLoginQuery(loginProvider, request.RedirectUrl));
