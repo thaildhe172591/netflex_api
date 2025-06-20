@@ -1,4 +1,5 @@
 using FluentValidation;
+using Netflex.Domain.ValueObjects;
 
 namespace Netflex.Application.UseCases.V1.Auth.Commands;
 
@@ -13,13 +14,17 @@ public class SendOTPCommandValidator
     }
 }
 
-public class SendOTPHandler(IEmailService emailService, IOTPGenerator otpGenerator)
+public class SendOTPHandler(IEmailService emailService, IOTPGenerator otpGenerator, IUnitOfWork unitOfWork)
     : ICommandHandler<SendOTPCommand>
 {
     private readonly IOTPGenerator _otpGenerator = otpGenerator;
     private readonly IEmailService _emailService = emailService;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     public async Task<Unit> Handle(SendOTPCommand request, CancellationToken cancellationToken)
     {
+        var hasExists = await _unitOfWork.Repository<Domain.Entities.User>()
+            .ExistsAsync(u => u.Email == Email.Of(request.Email), cancellationToken);
+        if (!hasExists) throw new UserNotFoundException();
         var otp = await _otpGenerator.GenerateOTPAsync(request.Email, cancellationToken);
         var company = _emailService.Settings.Company;
         var html = GetOTPEmail(otp, company);
