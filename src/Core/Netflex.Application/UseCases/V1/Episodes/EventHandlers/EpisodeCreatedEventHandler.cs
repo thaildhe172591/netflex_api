@@ -1,6 +1,6 @@
 using Netflex.Domain.Events;
 
-namespace Netflex.Application.UseCases.V1.Episode.EventHandlers;
+namespace Netflex.Application.UseCases.V1.Episodes.EventHandlers;
 
 public class EpisodeCreatedEventHandler(ILogger<EpisodeCreatedEventHandler> logger, ISender sender)
         : INotificationHandler<EpisodeCreatedEvent>

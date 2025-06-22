@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using Netflex.Application.Exceptions;
-using Netflex.Application.UseCases.V1.User.Queries;
+using Netflex.Application.UseCases.V1.Users.Queries;
 
 namespace Netflex.WebAPI.Endpoints.V1.Auth;
 

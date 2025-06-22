@@ -1,7 +1,7 @@
 using Netflex.Domain.ValueObjects;
 using FluentValidation;
 
-namespace Netflex.Application.UseCases.V1.User.Commands;
+namespace Netflex.Application.UseCases.V1.Users.Commands;
 
 public record CreateUserResult(string Id);
 public record CreateUserCommand(string Email, string Password) : ICommand<CreateUserResult>;

@@ -1,9 +1,9 @@
-using Netflex.Application.UseCases.V1.Keyword.Queries;
+using Netflex.Application.UseCases.V1.Keywords.Queries;
 using Netflex.Shared.Pagination;
 
 namespace Netflex.WebAPI.Endpoints.V1.Keywords;
 
-public record GetKeywordsRequest(string? Query, string? OrderBy, int PageIndex = 0, int PageSize = 10)
+public record GetKeywordsRequest(string? Search, string? SortBy, int PageIndex = 0, int PageSize = 10)
     : PaginationRequest(PageIndex, PageSize);
 
 public class GetKeywordsEndpoint : ICarterModule

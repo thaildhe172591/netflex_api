@@ -1,7 +1,7 @@
 using FluentValidation;
 using Netflex.Domain.ValueObjects;
 
-namespace Netflex.Application.UseCases.V1.User.Commands;
+namespace Netflex.Application.UseCases.V1.Users.Commands;
 
 public record ResetPasswordCommand(string Email, string OTP, string NewPassword)
     : ICommand;

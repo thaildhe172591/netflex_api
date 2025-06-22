@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Netflex.Application.UseCases.V1.User.Commands;
+namespace Netflex.Application.UseCases.V1.Users.Commands;
 
 public record ChangePasswordCommand(string UserId, string SessionId,
     string OldPassword, string NewPassword)

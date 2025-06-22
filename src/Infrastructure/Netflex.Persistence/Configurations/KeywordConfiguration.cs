@@ -10,6 +10,10 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
         builder.ToTable(nameof(Keyword).Pluralize().ToSnakeCase())
             .HasKey(k => k.Id);
 
+        builder.Property(t => t.Id)
+            .HasColumnName($"{nameof(Keyword)}{nameof(Keyword.Id)}".ToSnakeCase())
+            .ValueGeneratedOnAdd();
+
         builder.Property(k => k.Name)
             .IsRequired();
 

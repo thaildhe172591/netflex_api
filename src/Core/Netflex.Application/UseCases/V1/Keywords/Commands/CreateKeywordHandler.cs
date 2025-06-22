@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Netflex.Application.UseCases.V1.Keyword.Commands;
+namespace Netflex.Application.UseCases.V1.Keywords.Commands;
 
 public record CreateKeywordCommand(string Name) : ICommand<CreateKeywordResult>;
 public record CreateKeywordResult(long Id);

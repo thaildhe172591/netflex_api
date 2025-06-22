@@ -5,7 +5,7 @@ using Netflex.Application.Interfaces.Repositories;
 namespace Netflex.Persistence.Repositories;
 
 public class UserReadOnlyRepository(IDbConnection connection)
-    : ReadOnlyRepository<User>(connection), IUserReadOnlyRepository
+    : ReadOnlyRepository(connection), IUserReadOnlyRepository
 {
     public async Task<UserDetailDTO?> GetUserDetailAsync(string userId)
     {

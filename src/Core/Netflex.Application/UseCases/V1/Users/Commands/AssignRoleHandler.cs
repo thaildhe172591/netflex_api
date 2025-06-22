@@ -1,7 +1,7 @@
 using FluentValidation;
 using Netflex.Shared.Exceptions;
 
-namespace Netflex.Application.UseCases.V1.User.Commands;
+namespace Netflex.Application.UseCases.V1.Users.Commands;
 
 public record AssignRoleCommand(string UserId, string RoleName) : ICommand;
 

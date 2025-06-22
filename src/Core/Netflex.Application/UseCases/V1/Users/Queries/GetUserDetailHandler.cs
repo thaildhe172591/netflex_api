@@ -1,4 +1,4 @@
-namespace Netflex.Application.UseCases.V1.User.Queries;
+namespace Netflex.Application.UseCases.V1.Users.Queries;
 
 public record GetUserDetailQuery(string UserId) : IQuery<GetUserDetailResult>;
 public record GetUserDetailResult(UserDetailDTO User);

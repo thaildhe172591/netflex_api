@@ -1,4 +1,4 @@
-using Netflex.Application.UseCases.V1.User.Commands;
+using Netflex.Application.UseCases.V1.Users.Commands;
 
 namespace Netflex.WebAPI.Endpoints.V1.Users;
 

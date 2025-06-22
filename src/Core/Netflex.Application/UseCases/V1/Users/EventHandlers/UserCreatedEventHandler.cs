@@ -1,8 +1,8 @@
 using Netflex.Application.UseCases.V1.Auth.Commands;
-using Netflex.Application.UseCases.V1.User.Commands;
+using Netflex.Application.UseCases.V1.Users.Commands;
 using Netflex.Domain.Events;
 
-namespace Netflex.Application.UseCases.V1.User.EventHandlers;
+namespace Netflex.Application.UseCases.V1.Users.EventHandlers;
 
 public class UserCreatedEventHandler(ILogger<UserCreatedEventHandler> logger, ISender sender)
         : INotificationHandler<UserCreatedEvent>

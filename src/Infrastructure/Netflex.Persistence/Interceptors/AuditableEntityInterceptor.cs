@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Netflex.Domain.Entities.Abstractions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -11,7 +10,7 @@ public class AuditableEntityInterceptor(IHttpContextAccessor accessor)
         : SaveChangesInterceptor
 {
     private readonly IHttpContextAccessor _accessor = accessor;
-    public string LoggedInUser
+    public string LoggedInUserId
        => _accessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -26,12 +25,12 @@ public class AuditableEntityInterceptor(IHttpContextAccessor accessor)
     public void UpdateEntities(DbContext? dbContext)
     {
         if (dbContext == null) return;
-        var user = LoggedInUser;
+        var userId = LoggedInUserId;
         foreach (var entry in dbContext.ChangeTracker.Entries<IAuditable>())
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedBy = user;
+                entry.Entity.CreatedBy = userId;
                 entry.Entity.CreatedAt = DateTime.UtcNow;
             }
 
@@ -39,7 +38,7 @@ public class AuditableEntityInterceptor(IHttpContextAccessor accessor)
                 || entry.State == EntityState.Modified
                 || entry.HasChangedOwnedEntities())
             {
-                entry.Entity.LastModifiedBy = user;
+                entry.Entity.LastModifiedBy = userId;
                 entry.Entity.LastModified = DateTime.UtcNow;
             }
         }

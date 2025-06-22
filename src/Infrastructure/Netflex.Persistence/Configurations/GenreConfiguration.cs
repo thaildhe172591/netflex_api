@@ -9,6 +9,10 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
         builder.ToTable(nameof(Genre).Pluralize().ToSnakeCase())
             .HasKey(g => g.Id);
 
+        builder.Property(t => t.Id)
+            .HasColumnName($"{nameof(Genre)}{nameof(Genre.Id)}".ToSnakeCase())
+            .ValueGeneratedOnAdd();
+
         builder.Property(g => g.Name)
             .IsRequired();
 
