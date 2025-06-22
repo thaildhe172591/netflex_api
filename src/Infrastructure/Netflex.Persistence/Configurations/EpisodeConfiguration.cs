@@ -36,6 +36,9 @@ public class EpisodeConfiguration
 
         builder.HasMany(e => e.Actors)
             .WithMany()
-            .UsingEntity($"{nameof(Episode)}{nameof(Actor)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(Episode)}{nameof(Actor)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Actor>().WithMany().HasForeignKey($"{nameof(Actor)}{nameof(Actor.Id)}".ToSnakeCase()),
+                left => left.HasOne<Episode>().WithMany().HasForeignKey($"{nameof(Episode)}{nameof(Episode.Id)}".ToSnakeCase()));
     }
 }

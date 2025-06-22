@@ -40,15 +40,24 @@ public class MovieConfiguration
 
         builder.HasMany(m => m.Genres)
             .WithMany()
-            .UsingEntity($"{nameof(Movie)}{nameof(Genre)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(Movie)}{nameof(Genre)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Genre>().WithMany().HasForeignKey($"{nameof(Genre)}{nameof(Genre.Id)}".ToSnakeCase()),
+                left => left.HasOne<Movie>().WithMany().HasForeignKey($"{nameof(Movie)}{nameof(Movie.Id)}".ToSnakeCase()));
 
         builder.HasMany(m => m.Keywords)
             .WithMany()
-            .UsingEntity($"{nameof(Movie)}{nameof(Keyword)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(Movie)}{nameof(Keyword)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Keyword>().WithMany().HasForeignKey($"{nameof(Keyword)}{nameof(Keyword.Id)}".ToSnakeCase()),
+                left => left.HasOne<Movie>().WithMany().HasForeignKey($"{nameof(Movie)}{nameof(Movie.Id)}".ToSnakeCase()));
 
         builder.HasMany(m => m.Actors)
             .WithMany()
-            .UsingEntity($"{nameof(Movie)}{nameof(Actor)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(Movie)}{nameof(Actor)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Actor>().WithMany().HasForeignKey($"{nameof(Actor)}{nameof(Actor.Id)}".ToSnakeCase()),
+                left => left.HasOne<Movie>().WithMany().HasForeignKey($"{nameof(Movie)}{nameof(Movie.Id)}".ToSnakeCase()));
 
     }
 }

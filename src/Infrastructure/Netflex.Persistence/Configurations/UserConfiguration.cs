@@ -37,10 +37,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(u => u.Roles)
             .WithMany(r => r.Users)
-            .UsingEntity($"{nameof(User)}{nameof(Role)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(User)}{nameof(Role)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Role>().WithMany().HasForeignKey($"{nameof(Role)}{nameof(Role.Id)}".ToSnakeCase()),
+                left => left.HasOne<User>().WithMany().HasForeignKey($"{nameof(User)}{nameof(User.Id)}".ToSnakeCase()));
 
         builder.HasMany(u => u.Permissions)
             .WithMany(p => p.Users)
-            .UsingEntity($"{nameof(User)}{nameof(Permission)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(User)}{nameof(Permission)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Permission>().WithMany().HasForeignKey($"{nameof(Permission)}{nameof(Permission.Id)}".ToSnakeCase()),
+                left => left.HasOne<User>().WithMany().HasForeignKey($"{nameof(User)}{nameof(User.Id)}".ToSnakeCase()));
     }
 }

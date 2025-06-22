@@ -16,6 +16,9 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 
         builder.HasMany(r => r.Permissions)
             .WithMany(p => p.Roles)
-            .UsingEntity($"{nameof(Role)}{nameof(Permission)}".Pluralize().ToSnakeCase());
+            .UsingEntity<Dictionary<string, object>>(
+                $"{nameof(Role)}{nameof(Permission)}".Pluralize().ToSnakeCase(),
+                right => right.HasOne<Permission>().WithMany().HasForeignKey($"{nameof(Permission)}{nameof(Permission.Id)}".ToSnakeCase()),
+                left => left.HasOne<Role>().WithMany().HasForeignKey($"{nameof(Role)}{nameof(Role.Id)}".ToSnakeCase()));
     }
 }

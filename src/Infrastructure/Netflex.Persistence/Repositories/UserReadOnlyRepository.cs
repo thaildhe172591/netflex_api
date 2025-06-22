@@ -15,10 +15,10 @@ public class UserReadOnlyRepository(IDbConnection connection)
                 COALESCE(string_agg(DISTINCT r.name, ','), '') AS roles,
                 COALESCE(string_agg(DISTINCT p.name, ','), '') AS permissions
             FROM dbo.users u
-            LEFT JOIN dbo.user_roles ur ON ur.users_id = u.user_id
-            LEFT JOIN dbo.roles r ON r.role_id = ur.roles_id
-            LEFT JOIN dbo.user_permissions up ON up.users_id = u.user_id
-            LEFT JOIN dbo.permissions p ON p.permission_id = up.permissions_id
+            LEFT JOIN dbo.user_roles ur ON ur.user_id = u.user_id
+            LEFT JOIN dbo.roles r ON r.role_id = ur.role_id
+            LEFT JOIN dbo.user_permissions up ON up.user_id = u.user_id
+            LEFT JOIN dbo.permissions p ON p.permission_id = up.permission_id
             WHERE u.user_id = @Id
             GROUP BY u.email";
 
