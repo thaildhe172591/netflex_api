@@ -16,12 +16,12 @@ public class EmailService(IConfiguration configuration) : IEmailService
     public EmailSettings Settings => _settings;
 
     public async Task SendEmailAsync(string toEmail, string subject,
-        string html, CancellationToken cancellationToken = default)
+        string htmlContent, CancellationToken cancellationToken = default)
     {
         var client = new SendGridClient(_settings.Key);
         var from = new EmailAddress(_settings.OwnerMail, _settings.Company);
         var to = new EmailAddress(toEmail);
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, null, html);
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, null, htmlContent);
         var response = await client.SendEmailAsync(msg, cancellationToken);
         if (!response.IsSuccessStatusCode) throw new EmailNotSentException(subject);
     }

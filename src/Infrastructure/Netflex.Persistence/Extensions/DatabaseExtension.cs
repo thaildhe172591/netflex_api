@@ -22,7 +22,7 @@ public static class DatabaseExtension
 
     private static async Task SeedAsync(ApplicationDbContext context)
     {
-        if (!context.Roles.Any())
+        if (!await context.Roles.AnyAsync())
         {
             context.Roles.Add(Role.Create(Guid.NewGuid().ToString(), "Admin"));
             context.Roles.Add(Role.Create(Guid.NewGuid().ToString(), "Moderator"));

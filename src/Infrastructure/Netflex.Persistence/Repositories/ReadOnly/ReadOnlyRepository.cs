@@ -44,13 +44,11 @@ public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
             .Select(part =>
             {
                 var segments = part.Split('.', StringSplitOptions.TrimEntries);
-                if (segments.Length != 2)
-                    return null;
-
                 var column = segments[0].ToLower();
-                var direction = segments[1].ToLower() ?? "asc";
+                var direction = segments.Length > 1
+                    && segments[1].Equals("desc", StringComparison.CurrentCultureIgnoreCase) ? "desc" : "asc";
 
-                if (!_columns.Contains(column) || direction != "asc" && direction != "desc")
+                if (!_columns.Contains(column))
                     return null;
 
                 return $"{column} {direction.ToUpper()}";
