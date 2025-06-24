@@ -4,13 +4,13 @@ using Netflex.Shared.Exceptions;
 namespace Netflex.Application.UseCases.V1.Series.Queries;
 
 public record GetSerieQuery(long Id)
-    : IQuery<SerieDto>;
+    : IQuery<SerieDetailDto>;
 
 public class GetSerieHandler(ISerieReadOnlyRepository serieReadOnlyRepository)
-    : IQueryHandler<GetSerieQuery, SerieDto>
+    : IQueryHandler<GetSerieQuery, SerieDetailDto>
 {
     private readonly ISerieReadOnlyRepository _serieReadOnlyRepository = serieReadOnlyRepository;
-    public async Task<SerieDto> Handle(GetSerieQuery request, CancellationToken cancellationToken)
+    public async Task<SerieDetailDto> Handle(GetSerieQuery request, CancellationToken cancellationToken)
     {
         var result = await _serieReadOnlyRepository.GetSerieAsync(
             request.Id,

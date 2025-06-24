@@ -1,6 +1,6 @@
 namespace Netflex.Application.Dtos;
 
-public record SerieDto
+public record SerieDetailDto
 (
     long Id,
     string Name,
@@ -9,5 +9,7 @@ public record SerieDto
     string? BackdropPath,
     string? CountryISO,
     DateTime? FirstAirDate,
-    DateTime? LastAirDate
+    DateTime? LastAirDate,
+    ICollection<KeywordDto>? Keywords,
+    ICollection<GenreDto>? Genres
 );

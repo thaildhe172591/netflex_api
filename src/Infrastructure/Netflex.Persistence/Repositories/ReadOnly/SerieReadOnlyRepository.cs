@@ -15,7 +15,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             "backdrop_path", "country_iso", "first_air_date", "last_air_date"];
     }
 
-    public async Task<SerieDto?> GetSerieAsync(long id, CancellationToken cancellationToken)
+    public async Task<SerieDetailDto?> GetSerieAsync(long id, CancellationToken cancellationToken)
     {
         var sql = @"
             -- Serie
@@ -50,7 +50,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
 
         using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
 
-        var serie = await multi.ReadSingleOrDefaultAsync<SerieDto>();
+        var serie = await multi.ReadSingleOrDefaultAsync<SerieDetailDto>();
         if (serie == null) return null;
 
         var keywords = (await multi.ReadAsync<KeywordDto>()).ToList();

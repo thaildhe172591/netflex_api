@@ -15,7 +15,7 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             "video_url", "country_iso", "run_time", "release_date"];
     }
 
-    public async Task<MovieDto?> GetMovieAsync(long id, CancellationToken cancellationToken)
+    public async Task<MovieDetailDto?> GetMovieAsync(long id, CancellationToken cancellationToken)
     {
         var sql = @"
             -- Movie
@@ -53,7 +53,7 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
 
         using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
 
-        var movie = await multi.ReadSingleOrDefaultAsync<MovieDto>();
+        var movie = await multi.ReadSingleOrDefaultAsync<MovieDetailDto>();
         if (movie == null) return null;
 
         var actors = (await multi.ReadAsync<ActorDto>()).ToList();

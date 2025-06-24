@@ -4,13 +4,13 @@ using Netflex.Shared.Exceptions;
 namespace Netflex.Application.UseCases.V1.Movies.Queries;
 
 public record GetMovieQuery(long Id)
-    : IQuery<MovieDto>;
+    : IQuery<MovieDetailDto>;
 
 public class GetMovieHandler(IMovieReadOnlyRepository movieReadOnlyRepository)
-    : IQueryHandler<GetMovieQuery, MovieDto>
+    : IQueryHandler<GetMovieQuery, MovieDetailDto>
 {
     private readonly IMovieReadOnlyRepository _movieReadOnlyRepository = movieReadOnlyRepository;
-    public async Task<MovieDto> Handle(GetMovieQuery request, CancellationToken cancellationToken)
+    public async Task<MovieDetailDto> Handle(GetMovieQuery request, CancellationToken cancellationToken)
     {
         var result = await _movieReadOnlyRepository.GetMovieAsync(
             request.Id,
