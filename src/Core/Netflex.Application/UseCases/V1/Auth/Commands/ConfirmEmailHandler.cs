@@ -3,7 +3,7 @@ using Netflex.Domain.ValueObjects;
 
 namespace Netflex.Application.UseCases.V1.Auth.Commands;
 
-public record ConfirmEmailCommand(string Email, string OTP) : ICommand;
+public record ConfirmEmailCommand(string Email, string Otp) : ICommand;
 
 public class ConfirmEmailCommandValidator
     : AbstractValidator<ConfirmEmailCommand>
@@ -11,19 +11,19 @@ public class ConfirmEmailCommandValidator
     public ConfirmEmailCommandValidator()
     {
         RuleFor(x => x.Email).EmailAddress();
-        RuleFor(x => x.OTP).Length(6);
+        RuleFor(x => x.Otp).Length(6);
     }
 }
 
-public class ConfirmEmailHandler(IOTPGenerator otpGenerator, IUnitOfWork unitOfWork)
+public class ConfirmEmailHandler(IOtpGenerator otpGenerator, IUnitOfWork unitOfWork)
     : ICommandHandler<ConfirmEmailCommand>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IOTPGenerator _otpGenerator = otpGenerator;
+    private readonly IOtpGenerator _otpGenerator = otpGenerator;
     public async Task<Unit> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        var isValid = await _otpGenerator.VerifyOTPAsync(request.Email, request.OTP, true, cancellationToken);
-        if (!isValid) throw new InvalidOTPException();
+        var isValid = await _otpGenerator.VerifyOtpAsync(request.Email, request.Otp, true, cancellationToken);
+        if (!isValid) throw new InvalidOtpException();
 
         var user = await _unitOfWork.Repository<Domain.Entities.User>()
             .GetAsync(u => u.Email == Email.Of(request.Email), cancellationToken: cancellationToken)

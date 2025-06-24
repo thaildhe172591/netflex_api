@@ -10,7 +10,6 @@ public class Episode : Aggregate<long>
     public DateTime? AirDate { get; set; }
     public required long SeriesId { get; set; }
     public virtual ICollection<Actor> Actors { get; set; } = [];
-    private Episode() { }
     public static Episode Create(string name, int episodeNumber, long seriesId, string? overview = default,
         string? videoURL = default, TimeSpan? runtime = default, DateTime? airDate = default)
     {

@@ -1,7 +1,7 @@
 namespace Netflex.Application.Interfaces;
 
-public interface IOTPGenerator
+public interface IOtpGenerator
 {
-    Task<string> GenerateOTPAsync(string email, CancellationToken cancellationToken = default);
-    Task<bool> VerifyOTPAsync(string email, string otp, bool revoke = false, CancellationToken cancellationToken = default);
+    Task<string> GenerateOtpAsync(string email, CancellationToken cancellationToken = default);
+    Task<bool> VerifyOtpAsync(string email, string otp, bool revoke = false, CancellationToken cancellationToken = default);
 }

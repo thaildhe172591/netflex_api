@@ -11,7 +11,6 @@ public class TVSerie : Aggregate<long>
     public DateTime? LastAirDate { get; set; }
     public virtual ICollection<Keyword> Keywords { get; set; } = [];
     public virtual ICollection<Genre> Genres { get; set; } = [];
-    private TVSerie() { }
     public static TVSerie Create(string name, string? overview = default, string? posterPath = default,
         string? backdropPath = default, DateTime? firstAirDate = default,
         DateTime? lastAirDate = default, string? countryISO = default)
@@ -28,5 +27,37 @@ public class TVSerie : Aggregate<long>
         };
         tvSerie.AddDomainEvent(new TVSerieCreatedEvent(tvSerie));
         return tvSerie;
+    }
+
+    public void AssignKeywords(IEnumerable<Keyword> keywords)
+    {
+        if (keywords == null) return;
+        Keywords.Clear();
+        foreach (var keyword in keywords)
+        {
+            Keywords.Add(keyword);
+        }
+    }
+
+    public void AssignGenres(IEnumerable<Genre> genres)
+    {
+        if (genres == null) return;
+        Genres.Clear();
+        foreach (var genre in genres)
+        {
+            Genres.Add(genre);
+        }
+    }
+
+    public void Update(string? name, string? overview, string? posterPath,
+        string? backdropPath, DateTime? firstAirDate, DateTime? lastAirDate, string? countryISO)
+    {
+        Name = name ?? Name;
+        Overview = overview ?? Overview;
+        PosterPath = posterPath ?? PosterPath;
+        BackdropPath = backdropPath ?? BackdropPath;
+        CountryISO = countryISO ?? CountryISO;
+        FirstAirDate = firstAirDate ?? FirstAirDate;
+        LastAirDate = lastAirDate ?? LastAirDate;
     }
 }

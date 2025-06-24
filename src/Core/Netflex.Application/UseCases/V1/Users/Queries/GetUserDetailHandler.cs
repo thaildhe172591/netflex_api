@@ -1,7 +1,7 @@
 namespace Netflex.Application.UseCases.V1.Users.Queries;
 
 public record GetUserDetailQuery(string UserId) : IQuery<GetUserDetailResult>;
-public record GetUserDetailResult(UserDetailDTO User);
+public record GetUserDetailResult(UserDetailDto User);
 
 public class GetUserDetailHandler(IUserReadOnlyRepository userReadOnlyRepository)
     : IQueryHandler<GetUserDetailQuery, GetUserDetailResult>

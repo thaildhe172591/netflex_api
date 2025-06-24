@@ -12,4 +12,9 @@ public class Genre : Entity<long>
         };
         return genre;
     }
+
+    public void Update(string name)
+    {
+        Name = name;
+    }
 }

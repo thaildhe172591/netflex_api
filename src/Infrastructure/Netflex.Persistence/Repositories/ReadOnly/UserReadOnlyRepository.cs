@@ -1,13 +1,13 @@
 using System.Data;
 using Dapper;
-using Netflex.Application.DTOs;
+using Netflex.Application.Dtos;
 using Netflex.Application.Interfaces.Repositories;
-namespace Netflex.Persistence.Repositories;
+namespace Netflex.Persistence.Repositories.ReadOnly;
 
 public class UserReadOnlyRepository(IDbConnection connection)
     : ReadOnlyRepository(connection), IUserReadOnlyRepository
 {
-    public async Task<UserDetailDTO?> GetUserDetailAsync(string userId)
+    public async Task<UserDetailDto?> GetUserDetailAsync(string userId)
     {
         const string sql = @"
             SELECT 
@@ -29,6 +29,6 @@ public class UserReadOnlyRepository(IDbConnection connection)
 
         var roles = result.Roles.Split(',', StringSplitOptions.RemoveEmptyEntries);
         var permissions = result.Permissions.Split(',', StringSplitOptions.RemoveEmptyEntries);
-        return new UserDetailDTO(result.Email, roles, permissions);
+        return new UserDetailDto(result.Email, roles, permissions);
     }
 }

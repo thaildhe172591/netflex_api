@@ -5,7 +5,6 @@ public class UserNotification
     public required string UserId { get; set; }
     public required long NotificationId { get; set; }
     public bool HaveRead { get; set; }
-    private UserNotification() { }
     public static UserNotification Create(string userId, long notificationId, bool haveRead = false)
         => new() { UserId = userId, NotificationId = notificationId, HaveRead = haveRead };
 }

@@ -36,7 +36,7 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
 
         var info = await service.FetchUserInfoAsync(request.Code, request.RedirectUrl);
 
-        var userRepository = _unitOfWork.Repository<Domain.Entities.User>();
+        var userRepository = _unitOfWork.Repository<User>();
         var userLoginRepository = _unitOfWork.Repository<UserLogin>();
 
         var userLogin = await userLoginRepository.GetAsync(ul =>
@@ -51,7 +51,7 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
             var userExists = await userRepository.ExistsAsync(u => u.Email == Email.Of(info.Email), cancellationToken);
             if (userExists) throw new EmailAlreadyExistsException();
 
-            var newUser = Domain.Entities.User.Create(userId, Email.Of(info.Email));
+            var newUser = User.Create(userId, Email.Of(info.Email));
             await userRepository.AddAsync(newUser, cancellationToken);
 
             userLogin = UserLogin.Create(userId, LoginProvider.Of(request.LoginProvider), info.Id);
@@ -83,9 +83,9 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
             await userSessionRepository.AddAsync(userSession, cancellationToken);
         }
 
-        var user = await _unitOfWork.Repository<Domain.Entities.User>()
+        var user = await _unitOfWork.Repository<User>()
             .GetAsync(x => x.Id == userSession.UserId,
-                includeProperties: nameof(Domain.Entities.User.Roles) + "," + nameof(Domain.Entities.User.Permissions),
+                includeProperties: nameof(User.Roles) + "," + nameof(User.Permissions),
                 cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 

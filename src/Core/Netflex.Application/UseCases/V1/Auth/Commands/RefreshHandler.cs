@@ -25,9 +25,9 @@ public class RefreshHandler(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenSer
         if (userSession is null || !userSession.IsValid(DateTime.UtcNow))
             throw new InvalidRefreshTokenException();
 
-        var user = await _unitOfWork.Repository<Domain.Entities.User>()
+        var user = await _unitOfWork.Repository<User>()
             .GetAsync(x => x.Id == userSession.UserId,
-                includeProperties: nameof(Domain.Entities.User.Roles) + "," + nameof(Domain.Entities.User.Permissions),
+                includeProperties: nameof(User.Roles) + "," + nameof(User.Permissions),
                 cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 

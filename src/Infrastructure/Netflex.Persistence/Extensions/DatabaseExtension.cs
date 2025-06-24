@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 namespace Netflex.Persistence.Extensions;
 
@@ -12,6 +13,13 @@ public static class DatabaseExtension
         await SeedAsync(context);
     }
 
+    public static bool HasChangedOwnedEntities(this EntityEntry entry) =>
+        entry.References.Any(r =>
+            r.TargetEntry != null &&
+                r.TargetEntry.Metadata.IsOwned() &&
+                    (r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified)
+        );
+
     private static async Task SeedAsync(ApplicationDbContext context)
     {
         if (!context.Roles.Any())
@@ -22,4 +30,6 @@ public static class DatabaseExtension
             await context.SaveChangesAsync();
         }
     }
+
+
 }

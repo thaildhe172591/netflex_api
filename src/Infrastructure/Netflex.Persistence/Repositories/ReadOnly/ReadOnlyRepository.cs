@@ -1,9 +1,9 @@
 using System.Data;
 using Dapper;
-using Netflex.Application.Interfaces.Repositories;
+using Netflex.Application.Interfaces.Repositories.ReadOnly;
 using Netflex.Shared.Pagination;
 
-namespace Netflex.Persistence.Repositories;
+namespace Netflex.Persistence.Repositories.ReadOnly;
 
 public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
 {
@@ -11,24 +11,24 @@ public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
     protected IEnumerable<string> _columns = [];
 
     protected async Task<PaginatedResult<T>> GetPagedDataAsync<T>(string query, string? sortBy,
-        int pageIndex, int pageSize, object? parameters = null) where T : class
+        int pageIndex, int pageSize, DynamicParameters? parameters = null) where T : class
     {
         var offset = (pageIndex - 1) * pageSize;
-        var orderBy = GenerateOrderBy(sortBy);
+        var orderBy = ParseOrderBy(sortBy);
 
-        string pagedQuery = @$"
+        var pagedQuery = @$"
             {query}
             ORDER BY {orderBy}
             LIMIT @PageSize OFFSET @Offset";
 
         var countQuery = @$"SELECT COUNT(*) FROM ({query}) AS Total";
-        var @params = new DynamicParameters(parameters);
-        @params.Add("@Offset", offset);
-        @params.Add("@PageSize", pageSize);
+        parameters ??= new DynamicParameters();
+        parameters.Add("@Offset", offset);
+        parameters.Add("@PageSize", pageSize);
 
         using var multi = await _connection.QueryMultipleAsync(
             $"{countQuery};{pagedQuery}",
-            @params
+            parameters
         );
 
         int totalCount = await multi.ReadSingleAsync<int>();
@@ -37,7 +37,7 @@ public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
         return new PaginatedResult<T>(data, totalCount, pageIndex, pageSize);
     }
 
-    private string GenerateOrderBy(string? orderBy)
+    private string ParseOrderBy(string? orderBy)
     {
         if (string.IsNullOrWhiteSpace(orderBy)) return "1";
         var orderByParts = orderBy.Split(',', StringSplitOptions.TrimEntries)
@@ -48,9 +48,9 @@ public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
                     return null;
 
                 var column = segments[0].ToLower();
-                var direction = segments[1].ToLower();
+                var direction = segments[1].ToLower() ?? "asc";
 
-                if (!_columns.Contains(column) || (direction != "asc" && direction != "desc"))
+                if (!_columns.Contains(column) || direction != "asc" && direction != "desc")
                     return null;
 
                 return $"{column} {direction.ToUpper()}";
@@ -58,6 +58,6 @@ public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
             .Where(part => part != null);
 
         var normalized = string.Join(", ", orderByParts);
-        return normalized ?? "1";
+        return string.IsNullOrWhiteSpace(normalized) ? "1" : normalized;
     }
 }

@@ -1,0 +1,116 @@
+using System.Data;
+using System.Text;
+using Dapper;
+using Netflex.Application.Dtos;
+using Netflex.Application.Interfaces.Repositories.ReadOnly;
+using Netflex.Shared.Pagination;
+
+namespace Netflex.Persistence.Repositories.ReadOnly;
+
+public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyRepository
+{
+    public MovieReadOnlyRepository(IDbConnection connection) : base(connection)
+    {
+        _columns = ["movie_id", "title", "overview", "poster_path", "backdrop_path",
+            "video_url", "country_iso", "run_time", "release_date"];
+    }
+
+    public async Task<MovieDto?> GetMovieAsync(long id, CancellationToken cancellationToken)
+    {
+        var sql = @"
+            -- Movie
+            SELECT 
+                movie_id AS id, title, overview, poster_path, backdrop_path, 
+                video_url, country_iso, run_time, release_date
+            FROM dbo.movies
+            WHERE movie_id = @Id;
+
+            -- Actors
+            SELECT 
+                a.actor_id AS id, 
+                a.name, 
+                a.avatar
+            FROM dbo.actors a
+            INNER JOIN dbo.movie_actors ma ON ma.actor_id = a.actor_id
+            WHERE ma.movie_id = @Id;
+
+            -- Keywords
+            SELECT 
+                k.keyword_id AS id, 
+                k.name
+            FROM dbo.keywords k
+            INNER JOIN dbo.movie_keywords mk ON mk.keyword_id = k.keyword_id
+            WHERE mk.movie_id = @Id;
+
+            -- Genres
+            SELECT 
+                g.genre_id AS id, 
+                g.name
+            FROM dbo.genres g
+            INNER JOIN dbo.movie_genres mg ON mg.genre_id = g.genre_id
+            WHERE mg.movie_id = @Id;
+        ";
+
+        using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
+
+        var movie = await multi.ReadSingleOrDefaultAsync<MovieDto>();
+        if (movie == null) return null;
+
+        var actors = (await multi.ReadAsync<ActorDto>()).ToList();
+        var keywords = (await multi.ReadAsync<KeywordDto>()).ToList();
+        var genres = (await multi.ReadAsync<KeywordDto>()).ToList();
+
+        return movie with
+        {
+            Actors = actors,
+            Keywords = keywords,
+            Genres = genres
+        };
+    }
+
+
+    public Task<PaginatedResult<MovieDto>> GetMoviesAsync(string? search,
+        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, IEnumerable<long>? actorIds, string? sortBy,
+        int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var query = new StringBuilder(@"
+            SELECT  movie_id as id, title, overview, poster_path, backdrop_path, video_url, country_iso, run_time, release_date
+            FROM dbo.movies
+            WHERE 1 = 1
+        ");
+        var parameters = new DynamicParameters();
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query.AppendLine("AND m.title ILIKE @Search");
+            parameters.Add("Search", $"%{search}%");
+        }
+
+        if (genreIds?.Any() == true)
+        {
+            query.AppendLine(@"
+                AND EXISTS (
+                    SELECT 1 FROM dbo.movie_genres mg
+                    INNER JOIN dbo.genres g ON g.genre_id = mg.genre_id
+                    WHERE mg.movie_id = m.movie_id
+                    AND g.genre_id = ANY(@GenreIds)
+                )
+            ");
+            parameters.Add("GenreIds", genreIds);
+        }
+
+        if (keywordIds?.Any() == true)
+        {
+            query.AppendLine(@"
+                AND EXISTS (
+                    SELECT 1 FROM dbo.movie_keywords mk
+                    INNER JOIN dbo.keywords k ON k.keyword_id = mk.keyword_id
+                    WHERE mk.movie_id = m.movie_id
+                    AND k.keyword_id = ANY(@KeywordIds)
+                )
+            ");
+            parameters.Add("KeywordIds", keywordIds);
+        }
+
+        return GetPagedDataAsync<MovieDto>(query.ToString(), sortBy, pageIndex, pageSize, parameters);
+    }
+}

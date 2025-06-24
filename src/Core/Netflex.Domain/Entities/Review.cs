@@ -9,7 +9,6 @@ public class Review : IEntity
     public string? Comment { get; set; }
     public int LikeCount { get; set; }
     public required DateTime CreatedAt { get; set; }
-    private Review() { }
 
     public static Review Create(string targetId, TargetType targetType, string userId, Rating rating,
         string? comment, DateTime? createdAt = default)

@@ -6,7 +6,6 @@ public class Follow : IEntity
     public required TargetType TargetType { get; set; }
     public required string UserId { get; set; }
     public required DateTime CreatedAt { get; set; }
-    private Follow() { }
     public static Follow Create(string targetId, TargetType targetType, string userId, DateTime? createdAt = default)
     {
         return new Follow()

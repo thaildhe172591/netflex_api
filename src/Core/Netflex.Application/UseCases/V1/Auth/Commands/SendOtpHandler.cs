@@ -3,37 +3,37 @@ using Netflex.Domain.ValueObjects;
 
 namespace Netflex.Application.UseCases.V1.Auth.Commands;
 
-public record SendOTPCommand(string Email) : ICommand;
+public record SendOtpCommand(string Email) : ICommand;
 
-public class SendOTPCommandValidator
-    : AbstractValidator<SendOTPCommand>
+public class SendOtpCommandValidator
+    : AbstractValidator<SendOtpCommand>
 {
-    public SendOTPCommandValidator()
+    public SendOtpCommandValidator()
     {
         RuleFor(x => x.Email).EmailAddress();
     }
 }
 
-public class SendOTPHandler(IEmailService emailService, IOTPGenerator otpGenerator, IUnitOfWork unitOfWork)
-    : ICommandHandler<SendOTPCommand>
+public class SendOtpHandler(IEmailService emailService, IOtpGenerator otpGenerator, IUnitOfWork unitOfWork)
+    : ICommandHandler<SendOtpCommand>
 {
-    private readonly IOTPGenerator _otpGenerator = otpGenerator;
+    private readonly IOtpGenerator _otpGenerator = otpGenerator;
     private readonly IEmailService _emailService = emailService;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    public async Task<Unit> Handle(SendOTPCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendOtpCommand request, CancellationToken cancellationToken)
     {
         var hasExists = await _unitOfWork.Repository<Domain.Entities.User>()
             .ExistsAsync(u => u.Email == Email.Of(request.Email), cancellationToken);
         if (!hasExists) throw new UserNotFoundException();
-        var otp = await _otpGenerator.GenerateOTPAsync(request.Email, cancellationToken);
+        var otp = await _otpGenerator.GenerateOtpAsync(request.Email, cancellationToken);
         var company = _emailService.Settings.Company;
-        var html = GetOTPEmail(otp, company);
-        await _emailService.SendEmailAsync(request.Email, $"{company} OTP Verification", html, cancellationToken);
+        var html = GetOtpEmail(otp, company);
+        await _emailService.SendEmailAsync(request.Email, $"{company} Otp Verification", html, cancellationToken);
         return Unit.Value;
     }
 
 
-    private static string GetOTPEmail(string otp, string company)
+    private static string GetOtpEmail(string otp, string company)
     {
         return $"""
         <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">

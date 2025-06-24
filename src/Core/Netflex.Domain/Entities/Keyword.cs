@@ -12,4 +12,9 @@ public class Keyword : Entity<long>
         };
         return keyword;
     }
+
+    public void Update(string name)
+    {
+        Name = name;
+    }
 }

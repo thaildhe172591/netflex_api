@@ -10,7 +10,6 @@ public class User : Aggregate<string>
     public virtual ICollection<Permission> Permissions { get; set; } = [];
     public virtual ICollection<UserSession> UserSessions { get; set; } = [];
     public virtual ICollection<UserLogin> UserLogins { get; set; } = [];
-    private User() { }
     public static User Create(string id, Email email, HashString passwordHash, bool emailConfirmed = false)
     {
         var user = Create(id, email, emailConfirmed);

@@ -7,6 +7,8 @@ using System.Data;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
 using Netflex.Application.Exceptions;
+using Netflex.Application.Interfaces.Repositories.ReadOnly;
+using Netflex.Persistence.Repositories.ReadOnly;
 
 namespace Netflex.Persistence;
 
@@ -19,7 +21,9 @@ public static class DependencyInjection
             ?? throw new NotConfiguredException("Database");
 
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DateTrackingEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, UserTrackingEntityInterceptor>();
+
         services.AddHttpContextAccessor();
 
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
@@ -36,7 +40,10 @@ public static class DependencyInjection
             .AddTransient<IUserRepository, UserRepository>();
 
         services.AddTransient<IUserReadOnlyRepository, UserReadOnlyRepository>()
-            .AddTransient<IKeywordReadOnlyRepository, KeywordReadOnlyRepository>();
+            .AddTransient<IKeywordReadOnlyRepository, KeywordReadOnlyRepository>()
+            .AddTransient<IGenreReadOnlyRepository, GenreReadOnlyRepository>()
+            .AddTransient<IMovieReadOnlyRepository, MovieReadOnlyRepository>()
+            .AddTransient<ISerieReadOnlyRepository, SerieReadOnlyRepository>();
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         services.Decorate<IUserRepository, CachedUserRepository>();

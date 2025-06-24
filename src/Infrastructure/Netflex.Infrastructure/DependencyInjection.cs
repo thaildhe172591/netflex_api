@@ -26,7 +26,7 @@ public static class DependencyInjection
         services.AddSingleton<ISlugGenerator, SlugGenerator>();
 
         services.AddScoped<IEmailService, EmailService>()
-            .AddScoped<IOTPGenerator, OTPGenerator>()
+            .AddScoped<IOtpGenerator, OtpGenerator>()
             .AddScoped<IRefreshOptions, RefreshOptions>()
             .AddScoped<IJwtTokenService, JwtTokenService>();
 

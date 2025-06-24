@@ -16,6 +16,6 @@ public class UserCreatedEventHandler(ILogger<UserCreatedEventHandler> logger, IS
     {
         _logger.LogInformation("Domain Event handled: {DomainEvent}", nameof(UserCreatedEvent));
         await _sender.Send(new AssignRoleCommand(domainEvent.User.Id, DEFAULT_ROLE_NAME), cancellationToken);
-        await _sender.Send(new SendOTPCommand(domainEvent.User.Email.Value), cancellationToken);
+        await _sender.Send(new SendOtpCommand(domainEvent.User.Email.Value), cancellationToken);
     }
 }
