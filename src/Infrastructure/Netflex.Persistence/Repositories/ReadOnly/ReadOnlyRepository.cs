@@ -40,10 +40,10 @@ public class ReadOnlyRepository(IDbConnection connection) : IReadOnlyRepository
     private string ParseOrderBy(string? orderBy)
     {
         if (string.IsNullOrWhiteSpace(orderBy)) return "1";
-        var orderByParts = orderBy.Split(',', StringSplitOptions.TrimEntries)
+        var orderByParts = orderBy.Split([','], StringSplitOptions.TrimEntries)
             .Select(part =>
             {
-                var segments = part.Split('.', StringSplitOptions.TrimEntries);
+                var segments = part.Split(['.'], StringSplitOptions.TrimEntries);
                 var column = segments[0].ToLower();
                 var direction = segments.Length > 1
                     && segments[1].Equals("desc", StringComparison.CurrentCultureIgnoreCase) ? "desc" : "asc";

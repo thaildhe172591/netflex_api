@@ -6,14 +6,14 @@ public class TVSerie : Aggregate<long>
     public string? Overview { get; set; }
     public string? PosterPath { get; set; }
     public string? BackdropPath { get; set; }
-    public string? CountryISO { get; set; }
+    public string? CountryIso { get; set; }
     public DateTime? FirstAirDate { get; set; }
     public DateTime? LastAirDate { get; set; }
     public virtual ICollection<Keyword> Keywords { get; set; } = [];
     public virtual ICollection<Genre> Genres { get; set; } = [];
     public static TVSerie Create(string name, string? overview = default, string? posterPath = default,
         string? backdropPath = default, DateTime? firstAirDate = default,
-        DateTime? lastAirDate = default, string? countryISO = default)
+        DateTime? lastAirDate = default, string? countryIso = default)
     {
         var tvSerie = new TVSerie()
         {
@@ -21,7 +21,7 @@ public class TVSerie : Aggregate<long>
             Overview = overview,
             PosterPath = posterPath,
             BackdropPath = backdropPath,
-            CountryISO = countryISO,
+            CountryIso = countryIso,
             FirstAirDate = firstAirDate,
             LastAirDate = lastAirDate
         };
@@ -50,13 +50,13 @@ public class TVSerie : Aggregate<long>
     }
 
     public void Update(string? name, string? overview, string? posterPath,
-        string? backdropPath, DateTime? firstAirDate, DateTime? lastAirDate, string? countryISO)
+        string? backdropPath, DateTime? firstAirDate, DateTime? lastAirDate, string? countryIso)
     {
         Name = name ?? Name;
         Overview = overview ?? Overview;
         PosterPath = posterPath ?? PosterPath;
         BackdropPath = backdropPath ?? BackdropPath;
-        CountryISO = countryISO ?? CountryISO;
+        CountryIso = countryIso ?? CountryIso;
         FirstAirDate = firstAirDate ?? FirstAirDate;
         LastAirDate = lastAirDate ?? LastAirDate;
     }

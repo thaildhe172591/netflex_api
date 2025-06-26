@@ -6,8 +6,8 @@ public class Movie : Aggregate<long>
     public string? Overview { get; set; }
     public string? PosterPath { get; set; }
     public string? BackdropPath { get; set; }
-    public string? VideoURL { get; set; }
-    public string? CountryISO { get; set; }
+    public string? VideoUrl { get; set; }
+    public string? CountryIso { get; set; }
     public TimeSpan? RunTime { get; set; }
     public DateTime? ReleaseDate { get; set; }
     public virtual ICollection<Actor> Actors { get; set; } = [];
@@ -15,7 +15,7 @@ public class Movie : Aggregate<long>
     public virtual ICollection<Genre> Genres { get; set; } = [];
     public static Movie Create(string title, string? overview = default, string? posterPath = default,
         string? backdropPath = default, TimeSpan? runTime = default, DateTime? releaseDate = default,
-            string? countryISO = default, string? videoURL = default)
+            string? countryIso = default, string? videoUrl = default)
     {
         var movie = new Movie()
         {
@@ -25,22 +25,22 @@ public class Movie : Aggregate<long>
             Overview = overview,
             PosterPath = posterPath,
             BackdropPath = backdropPath,
-            VideoURL = videoURL,
-            CountryISO = countryISO
+            VideoUrl = videoUrl,
+            CountryIso = countryIso
         };
         movie.AddDomainEvent(new MovieCreatedEvent(movie));
         return movie;
     }
 
     public void Update(string? title, string? overview, string? posterPath, string? backdropPath,
-        TimeSpan? runTime, DateTime? releaseDate, string? countryISO, string? videoURL)
+        TimeSpan? runTime, DateTime? releaseDate, string? countryIso, string? videoUrl)
     {
         Title = title ?? Title;
         Overview = overview ?? Overview;
         PosterPath = posterPath ?? PosterPath;
         BackdropPath = backdropPath ?? BackdropPath;
-        VideoURL = videoURL ?? VideoURL;
-        CountryISO = countryISO ?? CountryISO;
+        VideoUrl = videoUrl ?? VideoUrl;
+        CountryIso = countryIso ?? CountryIso;
         RunTime = runTime ?? RunTime;
         ReleaseDate = releaseDate ?? ReleaseDate;
     }

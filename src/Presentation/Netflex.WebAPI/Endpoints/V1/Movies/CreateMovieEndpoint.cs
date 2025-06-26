@@ -7,9 +7,8 @@ public record CreateMovieRequest(
     string? Overview,
     string? PosterPath,
     string? BackdropPath,
-    string? VideoURL,
-    string? CountryISO,
-    TimeSpan? RunTime,
+    string? VideoUrl,
+    string? CountryIso,
     DateTime? ReleaseDate,
     ICollection<long>? ActorIds,
     ICollection<long>? KeywordIds,
@@ -21,13 +20,14 @@ public class CreateMovieEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/Movies", async (CreateMovieRequest request, ISender sender) =>
+        app.MapPost("/movies", async (CreateMovieRequest request, ISender sender) =>
         {
             var command = request.Adapt<CreateMovieCommand>();
+
             var result = await sender.Send(command);
-            return Results.Ok(result.Adapt<CreateMovieResponse>());
+            return Results.Ok(result);
         })
-        .RequireAuthorization()
+        // .RequireAuthorization()
         .MapToApiVersion(1)
         .WithName(nameof(CreateMovieEndpoint));
     }

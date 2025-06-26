@@ -101,7 +101,7 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("series_id");
 
-                    b.Property<string>("VideoURL")
+                    b.Property<string>("VideoUrl")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
                         .HasColumnName("video_url");
@@ -202,7 +202,7 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("backdrop_path");
 
-                    b.Property<string>("CountryISO")
+                    b.Property<string>("CountryIso")
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)")
                         .HasColumnName("country_iso");
@@ -231,7 +231,7 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("title");
 
-                    b.Property<string>("VideoURL")
+                    b.Property<string>("VideoUrl")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
                         .HasColumnName("video_url");
@@ -417,7 +417,7 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("backdrop_path");
 
-                    b.Property<string>("CountryISO")
+                    b.Property<string>("CountryIso")
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)")
                         .HasColumnName("country_iso");

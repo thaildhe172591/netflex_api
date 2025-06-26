@@ -23,11 +23,11 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
                 tv_serie_id AS id,
                 name,
                 overview,
-                poster_path,
-                backdrop_path,
-                country_iso,
-                first_air_date,
-                last_air_date
+                poster_path as posterpath,
+                backdrop_path as backdroppath,
+                country_iso as countryiso,
+                first_air_date as firstairdate,
+                last_air_date as lastairdate
             FROM dbo.tv_series
             WHERE tv_serie_id = @Id;
 
@@ -37,7 +37,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
                 k.name
             FROM dbo.keywords k
             INNER JOIN dbo.serie_keywords sk ON sk.keyword_id = k.keyword_id
-            WHERE sk.serie_id = @Id;
+            WHERE sk.tv_serie_id = @Id;
 
             -- Genres
             SELECT 
@@ -45,7 +45,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
                 g.name
             FROM dbo.genres g
             INNER JOIN dbo.serie_genres sg ON sg.genre_id = g.genre_id
-            WHERE sg.serie_id = @Id;
+            WHERE sg.tv_serie_id = @Id;
         ";
 
         using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
@@ -69,8 +69,16 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
         int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
-            SELECT  serie_id as id, name, overview, poster_path, backdrop_path, country_iso, first_air_date, last_air_date
-            FROM dbo.tv_series
+            SELECT  
+                tv_serie_id as id, 
+                name, 
+                overview, 
+                poster_path as posterpath, 
+                backdrop_path as backdroppath, 
+                country_iso as countryiso, 
+                first_air_date as firstairdate, 
+                last_air_date as lastairdate
+            FROM dbo.tv_series s
             WHERE 1 = 1
         ");
         var parameters = new DynamicParameters();
@@ -87,7 +95,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
                 AND EXISTS (
                     SELECT 1 FROM dbo.serie_genres sg
                     INNER JOIN dbo.genres g ON g.genre_id = sg.genre_id
-                    WHERE sg.serie_id = s.tv_serie_id
+                    WHERE sg.tv_serie_id = s.tv_serie_id
                     AND g.genre_id = ANY(@GenreIds)
                 )
             ");
@@ -100,7 +108,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
                 AND EXISTS (
                     SELECT 1 FROM dbo.serie_keywords sk
                     INNER JOIN dbo.keywords k ON k.keyword_id = sk.keyword_id
-                    WHERE sk.serie_id = s.tv_serie_id
+                    WHERE sk.tv_serie_id = s.tv_serie_id
                     AND k.keyword_id = ANY(@KeywordIds)
                 )
             ");

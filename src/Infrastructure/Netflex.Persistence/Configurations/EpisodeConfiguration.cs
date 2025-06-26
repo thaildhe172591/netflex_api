@@ -24,7 +24,7 @@ public class EpisodeConfiguration
         builder.Property(t => t.Overview)
             .HasMaxLength(1024);
 
-        builder.Property(t => t.VideoURL)
+        builder.Property(t => t.VideoUrl)
             .HasMaxLength(256);
 
         builder.Property(t => t.Runtime);

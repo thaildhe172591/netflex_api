@@ -8,7 +8,7 @@ public record CreateSerieCommand(
     string? Overview,
     string? PosterPath,
     string? BackdropPath,
-    string? CountryISO,
+    string? CountryIso,
     DateTime? FirstAirDate,
     DateTime? LastAirDate,
     ICollection<long>? KeywordIds,
@@ -38,7 +38,7 @@ public class CreateSerieHandler(IUnitOfWork unitOfWork)
             request.BackdropPath,
             request.FirstAirDate,
             request.LastAirDate,
-            request.CountryISO
+            request.CountryIso
         );
 
         if (request.KeywordIds != null)

@@ -6,8 +6,8 @@ public record MovieDto(
     string? Overview,
     string? PosterPath,
     string? BackdropPath,
-    string? VideoURL,
-    string? CountryISO,
+    string? VideoUrl,
+    string? CountryIso,
     TimeSpan? RunTime,
     DateTime? ReleaseDate
 );

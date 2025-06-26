@@ -28,10 +28,10 @@ public class MovieConfiguration
         builder.Property(m => m.BackdropPath)
             .HasMaxLength(256);
 
-        builder.Property(m => m.VideoURL)
+        builder.Property(m => m.VideoUrl)
             .HasMaxLength(256);
 
-        builder.Property(m => m.CountryISO)
+        builder.Property(m => m.CountryIso)
             .HasMaxLength(3);
 
         builder.Property(m => m.RunTime);

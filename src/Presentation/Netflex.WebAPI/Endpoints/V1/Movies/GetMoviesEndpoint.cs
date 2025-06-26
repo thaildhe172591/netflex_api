@@ -36,7 +36,7 @@ public class GetMoviesEndpoint : ICarterModule
 
             };
             var result = await sender.Send(request.Adapt<GetMoviesQuery>());
-            return Results.Ok(query);
+            return Results.Ok(result);
         })
         .MapToApiVersion(1)
         .WithName(nameof(GetMoviesEndpoint));

@@ -10,8 +10,8 @@ public record UpdateMovieCommand(
     string? Overview,
     string? PosterPath,
     string? BackdropPath,
-    string? VideoURL,
-    string? CountryISO,
+    string? VideoUrl,
+    string? CountryIso,
     TimeSpan? RunTime,
     DateTime? ReleaseDate,
     ICollection<long>? ActorIds,
@@ -47,8 +47,8 @@ public class UpdateMovieHandler(IUnitOfWork unitOfWork)
             request.BackdropPath,
             request.RunTime,
             request.ReleaseDate,
-            request.CountryISO,
-            request.VideoURL
+            request.CountryIso,
+            request.VideoUrl
         );
 
         if (request.ActorIds != null)

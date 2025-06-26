@@ -26,7 +26,7 @@ public class TVSerieConfiguration
         builder.Property(t => t.BackdropPath)
             .HasMaxLength(256);
 
-        builder.Property(t => t.CountryISO)
+        builder.Property(t => t.CountryIso)
             .HasMaxLength(3);
 
         builder.Property(t => t.FirstAirDate);

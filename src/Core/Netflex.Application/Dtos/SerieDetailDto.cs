@@ -7,7 +7,7 @@ public record SerieDetailDto
     string? Overview,
     string? PosterPath,
     string? BackdropPath,
-    string? CountryISO,
+    string? CountryIso,
     DateTime? FirstAirDate,
     DateTime? LastAirDate,
     ICollection<KeywordDto>? Keywords,

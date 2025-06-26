@@ -20,8 +20,15 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
         var sql = @"
             -- Movie
             SELECT 
-                movie_id AS id, title, overview, poster_path, backdrop_path, 
-                video_url, country_iso, run_time, release_date
+                movie_id AS id, 
+                title, 
+                overview,
+                poster_path as posterpath, 
+                backdrop_path as backdroppath, 
+                video_url as videourl, 
+                country_iso as countryiso, 
+                run_time as runtime, 
+                release_date as releasedate
             FROM dbo.movies
             WHERE movie_id = @Id;
 
@@ -74,8 +81,17 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
         int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
-            SELECT  movie_id as id, title, overview, poster_path, backdrop_path, video_url, country_iso, run_time, release_date
-            FROM dbo.movies
+            SELECT  
+                movie_id as id, 
+                title, 
+                overview, 
+                poster_path as posterpath, 
+                backdrop_path as backdroppath, 
+                video_url as videourl, 
+                country_iso as countryiso, 
+                run_time as runtime, 
+                release_date as releasedate 
+            FROM dbo.movies m
             WHERE 1 = 1
         ");
         var parameters = new DynamicParameters();
