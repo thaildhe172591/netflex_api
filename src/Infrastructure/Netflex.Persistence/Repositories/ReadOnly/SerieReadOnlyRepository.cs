@@ -94,9 +94,8 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             query.AppendLine(@"
                 AND EXISTS (
                     SELECT 1 FROM dbo.tv_serie_genres sg
-                    INNER JOIN dbo.genres g ON g.genre_id = sg.genre_id
                     WHERE sg.tv_serie_id = s.tv_serie_id
-                    AND g.genre_id = ANY(@GenreIds)
+                    AND sg.genre_id = ANY(@GenreIds)
                 )
             ");
             parameters.Add("GenreIds", genreIds);
@@ -107,9 +106,8 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             query.AppendLine(@"
                 AND EXISTS (
                     SELECT 1 FROM dbo.tv_serie_keywords sk
-                    INNER JOIN dbo.keywords k ON k.keyword_id = sk.keyword_id
                     WHERE sk.tv_serie_id = s.tv_serie_id
-                    AND k.keyword_id = ANY(@KeywordIds)
+                    AND sk.keyword_id = ANY(@KeywordIds)
                 )
             ");
             parameters.Add("KeywordIds", keywordIds);

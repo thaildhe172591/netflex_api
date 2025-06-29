@@ -17,7 +17,7 @@ public class UpdateActorCommandValidator : AbstractValidator<UpdateActorCommand>
 {
     public UpdateActorCommandValidator()
     {
-        RuleFor(x => x.Id).NotNull();
+        RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Image).MaxFileSize(5)
            .AllowedExtensions(".jpg", ".jpeg", ".png", ".webp");
     }

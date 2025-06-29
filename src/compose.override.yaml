@@ -33,6 +33,7 @@ services:
       environment: 
         - ASPNETCORE_ENVIRONMENT=Development
         - ASPNETCORE_HTTP_PORTS=8080
+        - GoogleSettings__CredentialsFile=/app/secrets/google.credentials.json
       env_file:
         - .env
       depends_on:
@@ -42,3 +43,4 @@ services:
         - "6000:8080"
       volumes:
         - ~/.aspnet/https:/https:ro
+        - ./google.credentials.json:/app/secrets/google.credentials.json:ro

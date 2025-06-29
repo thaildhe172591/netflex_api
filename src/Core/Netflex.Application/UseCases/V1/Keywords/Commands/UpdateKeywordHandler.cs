@@ -9,7 +9,7 @@ public class UpdateKeywordCommandValidator : AbstractValidator<UpdateKeywordComm
 {
     public UpdateKeywordCommandValidator()
     {
-        RuleFor(x => x.Id).NotNull();
+        RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Name).NotEmpty();
     }
 }

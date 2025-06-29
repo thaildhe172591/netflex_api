@@ -9,7 +9,7 @@ public class UpdateGenreCommandValidator : AbstractValidator<UpdateGenreCommand>
 {
     public UpdateGenreCommandValidator()
     {
-        RuleFor(x => x.Id).NotNull();
+        RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Name).NotEmpty();
     }
 }

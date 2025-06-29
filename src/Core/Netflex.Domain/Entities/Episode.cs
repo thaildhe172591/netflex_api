@@ -26,4 +26,26 @@ public class Episode : Aggregate<long>
         episode.AddDomainEvent(new EpisodeCreatedEvent(episode));
         return episode;
     }
+
+    public void AssignActors(IEnumerable<Actor> actors)
+    {
+        if (actors == null) return;
+        Actors.Clear();
+        foreach (var actor in actors)
+        {
+            Actors.Add(actor);
+        }
+    }
+
+    public void Update(string? name, int? episodeNumber, long? seriesId, string? overview,
+        string? videoUrl, TimeSpan? runtime, DateTime? airDate)
+    {
+        Name = name ?? Name;
+        EpisodeNumber = episodeNumber ?? EpisodeNumber;
+        SeriesId = seriesId ?? SeriesId;
+        Overview = overview ?? Overview;
+        VideoUrl = videoUrl ?? VideoUrl;
+        Runtime = runtime ?? Runtime;
+        AirDate = airDate?.ToUniversalTime() ?? AirDate;
+    }
 }

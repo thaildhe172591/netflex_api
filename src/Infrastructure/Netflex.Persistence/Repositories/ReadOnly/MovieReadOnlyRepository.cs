@@ -106,9 +106,8 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             query.AppendLine(@"
                 AND EXISTS (
                     SELECT 1 FROM dbo.movie_actors ma
-                    INNER JOIN dbo.actors a ON a.actor_id = ma.actor_id
                     WHERE ma.movie_id = m.movie_id
-                    AND a.actor_id = ANY(@ActorIds)
+                    AND ma.actor_id = ANY(@ActorIds)
                 )
             ");
             parameters.Add("ActorIds", actorIds);
@@ -119,9 +118,8 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             query.AppendLine(@"
                 AND EXISTS (
                     SELECT 1 FROM dbo.movie_genres mg
-                    INNER JOIN dbo.genres g ON g.genre_id = mg.genre_id
                     WHERE mg.movie_id = m.movie_id
-                    AND g.genre_id = ANY(@GenreIds)
+                    AND mg.genre_id = ANY(@GenreIds)
                 )
             ");
             parameters.Add("GenreIds", genreIds);
@@ -132,9 +130,8 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             query.AppendLine(@"
                 AND EXISTS (
                     SELECT 1 FROM dbo.movie_keywords mk
-                    INNER JOIN dbo.keywords k ON k.keyword_id = mk.keyword_id
                     WHERE mk.movie_id = m.movie_id
-                    AND k.keyword_id = ANY(@KeywordIds)
+                    AND mk.keyword_id = ANY(@KeywordIds)
                 )
             ");
             parameters.Add("KeywordIds", keywordIds);
