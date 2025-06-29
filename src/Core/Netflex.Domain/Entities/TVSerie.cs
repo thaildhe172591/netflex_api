@@ -22,8 +22,8 @@ public class TVSerie : Aggregate<long>
             PosterPath = posterPath,
             BackdropPath = backdropPath,
             CountryIso = countryIso,
-            FirstAirDate = firstAirDate,
-            LastAirDate = lastAirDate
+            FirstAirDate = firstAirDate?.ToUniversalTime(),
+            LastAirDate = lastAirDate?.ToUniversalTime()
         };
         tvSerie.AddDomainEvent(new TVSerieCreatedEvent(tvSerie));
         return tvSerie;
@@ -57,7 +57,7 @@ public class TVSerie : Aggregate<long>
         PosterPath = posterPath ?? PosterPath;
         BackdropPath = backdropPath ?? BackdropPath;
         CountryIso = countryIso ?? CountryIso;
-        FirstAirDate = firstAirDate ?? FirstAirDate;
-        LastAirDate = lastAirDate ?? LastAirDate;
+        FirstAirDate = firstAirDate?.ToUniversalTime() ?? FirstAirDate;
+        LastAirDate = lastAirDate?.ToUniversalTime() ?? LastAirDate;
     }
 }

@@ -15,7 +15,7 @@ public class CreateKeywordEndpoint : ICarterModule
             var result = await sender.Send(command);
             return Results.Ok(result.Adapt<CreateKeywordResponse>());
         })
-        .RequireAuthorization()
+        // .RequireAuthorization()
         .MapToApiVersion(1)
         .WithName(nameof(CreateKeywordEndpoint));
     }

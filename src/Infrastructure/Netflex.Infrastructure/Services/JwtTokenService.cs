@@ -1,21 +1,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Netflex.Application.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Netflex.Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using Netflex.Application.Interfaces;
 
 namespace Netflex.Infrastructure.Services;
-
-public record JwtSettings
-{
-    public string Key { get; init; } = string.Empty;
-    public double ExpiresInMinutes { get; init; }
-    public string Issuer { get; init; } = string.Empty;
-    public string Audience { get; init; } = string.Empty;
-}
 
 public class JwtTokenService(IOptions<JwtSettings> options, IDistributedCache cache)
     : IJwtTokenService

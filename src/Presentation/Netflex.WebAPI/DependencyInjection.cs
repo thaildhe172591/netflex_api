@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Netflex.Application.Exceptions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
-using Netflex.WebAPI.Middleware;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Netflex.Infrastructure.Services;
+using Netflex.Infrastructure.Settings;
 
 namespace Netflex.WebAPI;
 
@@ -71,6 +70,7 @@ public static class DependencyInjection
             .Build();
 
         app.MapGroup(API_PREFIX)
+            .DisableAntiforgery()
             .WithApiVersionSet(versionSet)
             .MapCarter();
 

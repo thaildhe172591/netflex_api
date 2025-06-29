@@ -9,7 +9,7 @@ public class DeleteKeywordCommandValidator : AbstractValidator<DeleteKeywordComm
 {
     public DeleteKeywordCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Id).NotNull();
     }
 }
 

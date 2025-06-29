@@ -5,3 +5,4 @@ global using Netflex.Application.Interfaces;
 global using Netflex.Application.Interfaces.Repositories;
 global using Netflex.Application.Exceptions;
 global using Netflex.Application.Dtos;
+global using Netflex.Application.Validation;

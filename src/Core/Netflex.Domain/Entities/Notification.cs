@@ -12,7 +12,7 @@ public class Notification : Entity<long>
         {
             Title = title,
             Content = content,
-            CreatedAt = createdAt ?? DateTime.UtcNow
+            CreatedAt = createdAt?.ToUniversalTime() ?? DateTime.UtcNow
         };
     }
 }

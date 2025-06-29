@@ -8,15 +8,15 @@ public record UpdateMovieCommand(
     long Id,
     string? Title,
     string? Overview,
-    string? PosterPath,
-    string? BackdropPath,
-    string? VideoUrl,
+    IFileResource? Poster,
+    IFileResource? Backdrop,
+    IFileResource? Video,
     string? CountryIso,
     TimeSpan? RunTime,
     DateTime? ReleaseDate,
-    ICollection<long>? ActorIds,
-    ICollection<long>? KeywordIds,
-    ICollection<long>? GenreIds
+    ICollection<long>? Actors,
+    ICollection<long>? Keywords,
+    ICollection<long>? Genres
 ) : ICommand<UpdateMovieResult>;
 
 public record UpdateMovieResult(long Id);
@@ -29,10 +29,11 @@ public class UpdateMovieCommandValidator : AbstractValidator<UpdateMovieCommand>
     }
 }
 
-public class UpdateMovieHandler(IUnitOfWork unitOfWork)
+public class UpdateMovieHandler(IUnitOfWork unitOfWork, ICloudStorage cloudStorage)
     : ICommandHandler<UpdateMovieCommand, UpdateMovieResult>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly ICloudStorage _cloudStorage = cloudStorage;
 
     public async Task<UpdateMovieResult> Handle(UpdateMovieCommand request, CancellationToken cancellationToken)
     {
@@ -40,38 +41,65 @@ public class UpdateMovieHandler(IUnitOfWork unitOfWork)
         var movie = await movieRepository
             .GetAsync(m => m.Id == request.Id, cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(Movie), request.Id);
+
+        Uri? poster = null, backdrop = null, video = null;
+        var tasks = new List<Task>();
+
+        if (request.Poster != null)
+        {
+            var task = _cloudStorage.UploadAsync("poster", request.Poster)
+                .ContinueWith(t => poster = t.Result, cancellationToken);
+            tasks.Add(task);
+        }
+
+        if (request.Backdrop != null)
+        {
+            var task = _cloudStorage.UploadAsync("backdrop", request.Backdrop)
+                .ContinueWith(t => backdrop = t.Result, cancellationToken);
+            tasks.Add(task);
+        }
+
+        if (request.Video != null)
+        {
+            var task = _cloudStorage.UploadAsync("video", request.Video)
+                .ContinueWith(t => video = t.Result, cancellationToken);
+            tasks.Add(task);
+        }
+
+        await Task.WhenAll(tasks);
+
         movie.Update(
             request.Title,
             request.Overview,
-            request.PosterPath,
-            request.BackdropPath,
+            poster?.ToString(),
+            backdrop?.ToString(),
             request.RunTime,
             request.ReleaseDate,
             request.CountryIso,
-            request.VideoUrl
+            video?.ToString()
         );
 
-        if (request.ActorIds != null)
+        if (request.Actors != null)
         {
-            var actors = request.ActorIds.Count != 0
+            var actors = request.Actors.Count != 0
                 ? await _unitOfWork.Repository<Actor>()
-                    .GetAllAsync(a => request.ActorIds.Contains(a.Id), cancellationToken: cancellationToken) : [];
+                    .GetAllAsync(a => request.Actors.Contains(a.Id), cancellationToken: cancellationToken) : [];
             movie.AssignActors(actors);
         }
 
-        if (request.KeywordIds != null)
+        if (request.Keywords != null)
         {
-            var keywords = request.KeywordIds.Count != 0
+            var keywords = request.Keywords.Count != 0
                 ? await _unitOfWork.Repository<Keyword>()
-                    .GetAllAsync(k => request.KeywordIds.Contains(k.Id), cancellationToken: cancellationToken) : [];
+                    .GetAllAsync(k => request.Keywords.Contains(k.Id), cancellationToken: cancellationToken) : [];
             movie.AssignKeywords(keywords);
         }
 
-        if (request.GenreIds != null)
+        if (request.Genres != null)
         {
-            var genres = request.GenreIds.Count != 0
+            var genres = request.Genres.Count != 0
                 ? await _unitOfWork.Repository<Genre>()
-                    .GetAllAsync(g => request.GenreIds.Contains(g.Id), cancellationToken: cancellationToken) : [];
+                    .GetAllAsync(g => request.Genres.Contains(g.Id), cancellationToken: cancellationToken) : [];
             movie.AssignGenres(genres);
         }
 

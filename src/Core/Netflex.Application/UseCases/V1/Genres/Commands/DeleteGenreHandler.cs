@@ -9,7 +9,7 @@ public class DeleteGenreCommandValidator : AbstractValidator<DeleteGenreCommand>
 {
     public DeleteGenreCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Id).NotNull();
     }
 }
 

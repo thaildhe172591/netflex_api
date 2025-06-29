@@ -5,7 +5,7 @@ namespace Netflex.Application.Interfaces;
 public record UserInfo(string Id, string Name,
    string Email, string Picture);
 
-public interface ISocialLoginService
+public interface ISocialService
 {
     LoginProvider Provider { get; }
     Task<string> GetLoginUrlAsync(string provider);

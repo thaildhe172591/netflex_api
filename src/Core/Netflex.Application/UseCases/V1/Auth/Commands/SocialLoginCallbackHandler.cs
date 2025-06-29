@@ -21,17 +21,17 @@ public class SocialLoginCallbackCommandValidator
     }
 }
 public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenService,
-    IRefreshOptions refreshOptions, ISocialLoginServiceFactory socialLoginServiceFactory)
+    IRefreshOptions refreshOptions, ISocialServiceFactory socialServiceFactory)
     : ICommandHandler<SocialLoginCallbackCommand, SocialLoginCallbackResult>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly ISocialLoginServiceFactory _socialLoginServiceFactory = socialLoginServiceFactory;
+    private readonly ISocialServiceFactory _socialServiceFactory = socialServiceFactory;
     private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
     private readonly IRefreshOptions _refreshOptions = refreshOptions;
     public async Task<SocialLoginCallbackResult> Handle(SocialLoginCallbackCommand request,
         CancellationToken cancellationToken)
     {
-        var service = _socialLoginServiceFactory.GetByProvider(LoginProvider.Of(request.LoginProvider))
+        var service = _socialServiceFactory.GetByProvider(LoginProvider.Of(request.LoginProvider))
             ?? throw new NotSupportedLoginProviderException();
 
         var info = await service.FetchUserInfoAsync(request.Code, request.RedirectUrl);

@@ -21,7 +21,7 @@ public class Episode : Aggregate<long>
             Overview = overview,
             VideoUrl = videoUrl,
             Runtime = runtime,
-            AirDate = airDate
+            AirDate = airDate?.ToUniversalTime()
         };
         episode.AddDomainEvent(new EpisodeCreatedEvent(episode));
         return episode;

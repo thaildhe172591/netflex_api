@@ -23,14 +23,14 @@ public class GetSeriesEndpoint : ICarterModule
             {
                 GenreIds = request.Genres?.Split(',')
                   .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                  .Where(id => id != 0) ?? [],
+                  .Where(id => id != 0).ToArray() ?? [],
 
                 KeywordIds = request.Keywords?.Split(',')
                   .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                  .Where(id => id != 0) ?? []
+                  .Where(id => id != 0).ToArray() ?? []
             };
-            var result = await sender.Send(request.Adapt<GetSeriesQuery>());
-            return Results.Ok(query);
+            var result = await sender.Send(query);
+            return Results.Ok(result);
         })
         .MapToApiVersion(1)
         .WithName(nameof(GetSeriesEndpoint));

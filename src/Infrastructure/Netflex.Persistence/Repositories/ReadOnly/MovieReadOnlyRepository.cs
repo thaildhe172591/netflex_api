@@ -22,13 +22,13 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             SELECT 
                 movie_id AS id, 
                 title, 
-                overview,
-                poster_path as posterpath, 
-                backdrop_path as backdroppath, 
-                video_url as videourl, 
-                country_iso as countryiso, 
-                run_time as runtime, 
-                release_date as releasedate
+                overview, 
+                poster_path AS posterpath, 
+                backdrop_path AS backdroppath, 
+                video_url AS videourl, 
+                country_iso AS countryiso, 
+                run_time AS runtime, 
+                release_date AS releasedate 
             FROM dbo.movies
             WHERE movie_id = @Id;
 
@@ -36,7 +36,7 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             SELECT 
                 a.actor_id AS id, 
                 a.name, 
-                a.avatar
+                a.image
             FROM dbo.actors a
             INNER JOIN dbo.movie_actors ma ON ma.actor_id = a.actor_id
             WHERE ma.movie_id = @Id;
@@ -82,15 +82,15 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
     {
         var query = new StringBuilder(@"
             SELECT  
-                movie_id as id, 
+                movie_id AS id, 
                 title, 
                 overview, 
-                poster_path as posterpath, 
-                backdrop_path as backdroppath, 
-                video_url as videourl, 
-                country_iso as countryiso, 
-                run_time as runtime, 
-                release_date as releasedate 
+                poster_path AS posterpath, 
+                backdrop_path AS backdroppath, 
+                video_url AS videourl, 
+                country_iso AS countryiso, 
+                run_time AS runtime, 
+                release_date AS releasedate 
             FROM dbo.movies m
             WHERE 1 = 1
         ");
@@ -99,6 +99,19 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
         {
             query.AppendLine("AND m.title ILIKE @Search");
             parameters.Add("Search", $"%{search}%");
+        }
+
+        if (actorIds?.Any() == true)
+        {
+            query.AppendLine(@"
+                AND EXISTS (
+                    SELECT 1 FROM dbo.movie_actors ma
+                    INNER JOIN dbo.actors a ON a.actor_id = ma.actor_id
+                    WHERE ma.movie_id = m.movie_id
+                    AND a.actor_id = ANY(@ActorIds)
+                )
+            ");
+            parameters.Add("ActorIds", actorIds);
         }
 
         if (genreIds?.Any() == true)

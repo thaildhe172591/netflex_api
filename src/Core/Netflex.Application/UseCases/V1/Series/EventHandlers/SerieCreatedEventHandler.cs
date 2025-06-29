@@ -2,10 +2,10 @@ using Netflex.Domain.Events;
 
 namespace Netflex.Application.UseCases.V1.Series.EventHandlers;
 
-public class TVSerieCreatedEventHandler(ILogger<TVSerieCreatedEventHandler> logger, ISender sender)
+public class SerieCreatedEventHandler(ILogger<SerieCreatedEventHandler> logger, ISender sender)
         : INotificationHandler<TVSerieCreatedEvent>
 {
-    private readonly ILogger<TVSerieCreatedEventHandler> _logger = logger;
+    private readonly ILogger<SerieCreatedEventHandler> _logger = logger;
     private readonly ISender _sender = sender;
 
     public async Task Handle(TVSerieCreatedEvent domainEvent, CancellationToken cancellationToken)

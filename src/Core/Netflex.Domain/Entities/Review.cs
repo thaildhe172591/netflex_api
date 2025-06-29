@@ -20,7 +20,7 @@ public class Review : IEntity
             UserId = userId,
             Rating = rating,
             Comment = comment,
-            CreatedAt = createdAt ?? DateTime.UtcNow
+            CreatedAt = createdAt?.ToUniversalTime() ?? DateTime.UtcNow
         };
     }
 

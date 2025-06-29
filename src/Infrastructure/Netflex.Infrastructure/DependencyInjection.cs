@@ -1,3 +1,5 @@
+using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Netflex.Application.Exceptions;
@@ -19,6 +21,9 @@ public static class DependencyInjection
         services.Configure<RefreshSettings>(
             configuration.GetSection(nameof(RefreshSettings)));
 
+        services.Configure<GoogleSettings>(
+            configuration.GetSection(nameof(GoogleSettings)));
+
         services.AddHttpClient();
         services.AddStackExchangeRedisCache(options =>
             options.Configuration = cacheConnection);
@@ -30,8 +35,13 @@ public static class DependencyInjection
             .AddScoped<IRefreshOptions, RefreshOptions>()
             .AddScoped<IJwtTokenService, JwtTokenService>();
 
-        services.AddScoped<ISocialLoginService, GoogleLoginService>()
-            .AddScoped<ISocialLoginServiceFactory, SocialLoginServiceFactory>();
+        services.AddScoped<ISocialService, GoogleService>()
+            .AddScoped<ISocialServiceFactory, SocialServiceFactory>();
+
+        services.AddScoped<ICloudStorage, CloudStorage>();
+
+        TypeAdapterConfig<IFormFile?, IFileResource?>.ForType()
+            .MapWith(src => FormFileAdapter.From(src));
 
         return services;
     }

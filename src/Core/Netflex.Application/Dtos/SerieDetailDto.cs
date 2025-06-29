@@ -1,15 +1,15 @@
 namespace Netflex.Application.Dtos;
 
 public record SerieDetailDto
-(
-    long Id,
-    string Name,
-    string? Overview,
-    string? PosterPath,
-    string? BackdropPath,
-    string? CountryIso,
-    DateTime? FirstAirDate,
-    DateTime? LastAirDate,
-    ICollection<KeywordDto>? Keywords,
-    ICollection<GenreDto>? Genres
-);
+{
+    public long Id { get; init; }
+    public string? Name { get; init; }
+    public string? Overview { get; init; }
+    public string? PosterPath { get; init; }
+    public string? BackdropPath { get; init; }
+    public string? CountryIso { get; init; }
+    public DateTime? FirstAirDate { get; init; }
+    public DateTime? LastAirDate { get; init; }
+    public ICollection<KeywordDto>? Keywords { get; init; }
+    public ICollection<GenreDto>? Genres { get; init; }
+}

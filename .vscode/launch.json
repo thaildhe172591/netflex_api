@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Netflex.WebAPI",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/Presentation/Netflex.WebAPI/bin/Debug/net8.0/Netflex.WebAPI.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Presentation/Netflex.WebAPI",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  ]
+}

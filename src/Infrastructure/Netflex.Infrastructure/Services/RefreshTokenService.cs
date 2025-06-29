@@ -3,11 +3,6 @@ using Netflex.Application.Interfaces;
 
 namespace Netflex.Infrastructure.Services;
 
-public record RefreshSettings
-{
-    public int ExpiresInDays { get; init; }
-};
-
 public class RefreshOptions(IOptions<RefreshSettings> options) : IRefreshOptions
 {
     private readonly RefreshSettings _settings = options.Value;

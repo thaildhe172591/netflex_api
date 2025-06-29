@@ -13,10 +13,19 @@ public class Actor : Entity<long>
         {
             Name = name,
             Gender = gender,
-            BirthDate = birthDate,
+            BirthDate = birthDate?.ToUniversalTime(),
             Biography = biography,
             Image = image
         };
         return actor;
+    }
+
+    public void Update(string? name, string? image, bool? gender, DateTime? birthDate, string? biography)
+    {
+        Name = name ?? Name;
+        Image = image ?? Image;
+        Gender = gender ?? Gender;
+        BirthDate = birthDate?.ToUniversalTime() ?? BirthDate;
+        Biography = biography ?? Biography;
     }
 }

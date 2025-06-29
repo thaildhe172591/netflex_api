@@ -3,7 +3,7 @@ using Netflex.Shared.Pagination;
 
 namespace Netflex.WebAPI.Endpoints.V1.Keywords;
 
-public record GetKeywordsRequest(string? Search, string? SortBy, int PageIndex = 0, int PageSize = 10)
+public record GetKeywordsRequest(string? Search, string? SortBy, int PageIndex = 1, int PageSize = 10)
     : PaginationRequest(PageIndex, PageSize);
 
 public class GetKeywordsEndpoint : ICarterModule

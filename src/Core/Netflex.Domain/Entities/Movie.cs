@@ -21,7 +21,7 @@ public class Movie : Aggregate<long>
         {
             Title = title,
             RunTime = runTime,
-            ReleaseDate = releaseDate,
+            ReleaseDate = releaseDate?.ToUniversalTime(),
             Overview = overview,
             PosterPath = posterPath,
             BackdropPath = backdropPath,
@@ -42,7 +42,7 @@ public class Movie : Aggregate<long>
         VideoUrl = videoUrl ?? VideoUrl;
         CountryIso = countryIso ?? CountryIso;
         RunTime = runTime ?? RunTime;
-        ReleaseDate = releaseDate ?? ReleaseDate;
+        ReleaseDate = releaseDate?.ToUniversalTime() ?? ReleaseDate;
     }
 
     public void AssignActors(IEnumerable<Actor> actors)

@@ -5,9 +5,9 @@ namespace Netflex.Application.UseCases.V1.Movies.Queries;
 
 public record GetMoviesQuery(
     string? Search,
-    IEnumerable<long>? KeywordIds,
-    IEnumerable<long>? GenreIds,
-    IEnumerable<long>? ActorIds,
+    long[]? KeywordIds,
+    long[]? GenreIds,
+    long[]? ActorIds,
     string? SortBy,
     int PageIndex,
     int PageSize

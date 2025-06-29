@@ -1,11 +1,11 @@
 namespace Netflex.Application.Dtos;
 
-public class ActorDto
+public record ActorDto
 {
-    public long Id { get; set; }
-    public string? Name { get; set; }
-    public string? Image { get; set; }
-    public bool? Gender { get; set; }
-    public DateTime? BirthDate { get; set; }
-    public string? Biography { get; set; }
+    public long Id { get; init; }
+    public string? Name { get; init; }
+    public string? Image { get; init; }
+    public bool? Gender { get; init; }
+    public DateTime? BirthDate { get; init; }
+    public string? Biography { get; init; }
 }

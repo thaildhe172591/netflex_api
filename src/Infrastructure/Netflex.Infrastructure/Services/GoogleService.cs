@@ -1,23 +1,21 @@
-using Microsoft.Extensions.Configuration;
 using Netflex.Application.Exceptions;
-using Netflex.Application.Interfaces;
 using Google.Apis.Auth.OAuth2.Flows;
 using Netflex.Domain.ValueObjects;
-
+using Microsoft.Extensions.Options;
+using Netflex.Application.Interfaces;
 
 namespace Netflex.Infrastructure.Services;
 
-public record GoogleSettings(string ClientId, string ClientSecret, string UserInfoUrl);
 internal record UserInfoResponse(string Sub, string Email, string Name, string Picture)
 {
     public UserInfo ToUserInfo() => new(Sub, Name, Email, Picture);
 };
 
-public class GoogleLoginService(IConfiguration configuration, IHttpClientFactory factory)
-    : ISocialLoginService
+public class GoogleService(IHttpClientFactory factory, IOptions<GoogleSettings> options)
+    : ISocialService
 {
     private readonly IHttpClientFactory _factory = factory;
-    private readonly GoogleSettings _settings = configuration.GetSection(nameof(GoogleSettings)).Get<GoogleSettings>()
+    private readonly GoogleSettings _settings = options.Value
         ?? throw new NotConfiguredException(nameof(GoogleSettings));
     public LoginProvider Provider => LoginProvider.Google;
     public async Task<UserInfo> FetchUserInfoAsync(string code, string redirect)

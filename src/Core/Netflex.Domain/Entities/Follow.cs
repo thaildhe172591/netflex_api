@@ -13,7 +13,7 @@ public class Follow : IEntity
             TargetId = targetId,
             TargetType = targetType,
             UserId = userId,
-            CreatedAt = createdAt ?? DateTime.UtcNow
+            CreatedAt = createdAt?.ToUniversalTime() ?? DateTime.UtcNow
         };
     }
 }

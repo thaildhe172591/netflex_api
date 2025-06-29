@@ -5,8 +5,8 @@ namespace Netflex.Application.UseCases.V1.Series.Queries;
 
 public record GetSeriesQuery(
     string? Search,
-    IEnumerable<long>? KeywordIds,
-    IEnumerable<long>? GenreIds,
+    long[]? KeywordIds,
+    long[]? GenreIds,
     string? SortBy,
     int PageIndex,
     int PageSize

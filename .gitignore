@@ -183,4 +183,5 @@ StyleCopReport.xml
 
 # Secrets
 secrets.json
+**/*.credentials.json
 appsettings.Secret.json

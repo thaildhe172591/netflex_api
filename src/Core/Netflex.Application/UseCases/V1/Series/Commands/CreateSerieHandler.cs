@@ -6,13 +6,13 @@ namespace Netflex.Application.UseCases.V1.Series.Commands;
 public record CreateSerieCommand(
     string Name,
     string? Overview,
-    string? PosterPath,
-    string? BackdropPath,
+    IFileResource? Poster,
+    IFileResource? Backdrop,
     string? CountryIso,
     DateTime? FirstAirDate,
     DateTime? LastAirDate,
-    ICollection<long>? KeywordIds,
-    ICollection<long>? GenreIds
+    ICollection<long>? Keywords,
+    ICollection<long>? Genres
 ) : ICommand<CreateSerieResult>;
 
 public record CreateSerieResult(long Id);
@@ -21,39 +21,61 @@ public class CreateSerieCommandValidator : AbstractValidator<CreateSerieCommand>
     public CreateSerieCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty();
+        RuleFor(x => x.Poster).MaxFileSize(5).AllowedExtensions(".jpg", ".jpeg", ".png", ".webp");
+        RuleFor(x => x.Backdrop).MaxFileSize(5).AllowedExtensions(".jpg", ".jpeg", ".png", ".webp");
     }
 }
 
-public class CreateSerieHandler(IUnitOfWork unitOfWork)
+public class CreateSerieHandler(IUnitOfWork unitOfWork, ICloudStorage cloudStorage)
     : ICommandHandler<CreateSerieCommand, CreateSerieResult>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly ICloudStorage _cloudStorage = cloudStorage;
 
     public async Task<CreateSerieResult> Handle(CreateSerieCommand request, CancellationToken cancellationToken)
     {
+
+        Uri? poster = null, backdrop = null;
+        var tasks = new List<Task>();
+
+        if (request.Poster != null)
+        {
+            var task = _cloudStorage.UploadAsync("poster", request.Poster)
+                .ContinueWith(t => poster = t.Result, cancellationToken);
+            tasks.Add(task);
+        }
+
+        if (request.Backdrop != null)
+        {
+            var task = _cloudStorage.UploadAsync("backdrop", request.Backdrop)
+                .ContinueWith(t => backdrop = t.Result, cancellationToken);
+            tasks.Add(task);
+        }
+
+        await Task.WhenAll(tasks);
         var serie = TVSerie.Create(
             request.Name,
             request.Overview,
-            request.PosterPath,
-            request.BackdropPath,
+            poster?.ToString(),
+            backdrop?.ToString(),
             request.FirstAirDate,
             request.LastAirDate,
             request.CountryIso
         );
 
-        if (request.KeywordIds != null)
+        if (request.Keywords != null)
         {
-            var keywords = request.KeywordIds.Count != 0
+            var keywords = request.Keywords.Count != 0
                 ? await _unitOfWork.Repository<Keyword>()
-                    .GetAllAsync(k => request.KeywordIds.Contains(k.Id), cancellationToken: cancellationToken) : [];
+                    .GetAllAsync(k => request.Keywords.Contains(k.Id), cancellationToken: cancellationToken) : [];
             serie.AssignKeywords(keywords);
         }
 
-        if (request.GenreIds != null)
+        if (request.Genres != null)
         {
-            var genres = request.GenreIds.Count != 0
+            var genres = request.Genres.Count != 0
                 ? await _unitOfWork.Repository<Genre>()
-                    .GetAllAsync(g => request.GenreIds.Contains(g.Id), cancellationToken: cancellationToken) : [];
+                    .GetAllAsync(g => request.Genres.Contains(g.Id), cancellationToken: cancellationToken) : [];
             serie.AssignGenres(genres);
         }
 

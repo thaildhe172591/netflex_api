@@ -9,7 +9,7 @@ public record GetMoviesRequest(
     string? Keywords,
     string? Actors,
     string? SortBy,
-    int PageIndex = 0,
+    int PageIndex = 1,
     int PageSize = 10
 ) : PaginationRequest(PageIndex, PageSize);
 
@@ -24,18 +24,18 @@ public class GetMoviesEndpoint : ICarterModule
             {
                 GenreIds = request.Genres?.Split(',')
                   .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                  .Where(id => id != 0) ?? [],
+                  .Where(id => id != 0).ToArray() ?? [],
 
                 KeywordIds = request.Keywords?.Split(',')
                   .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                  .Where(id => id != 0) ?? [],
+                  .Where(id => id != 0).ToArray() ?? [],
 
                 ActorIds = request.Actors?.Split(',')
                  .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                 .Where(id => id != 0) ?? []
+                 .Where(id => id != 0).ToArray() ?? []
 
             };
-            var result = await sender.Send(request.Adapt<GetMoviesQuery>());
+            var result = await sender.Send(query);
             return Results.Ok(result);
         })
         .MapToApiVersion(1)
