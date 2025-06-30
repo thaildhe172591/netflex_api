@@ -12,7 +12,7 @@ public class GetMovieEndpoint : ICarterModule
             var result = await sender.Send(request.Adapt<GetMovieQuery>());
             return Results.Ok(result);
         })
-        // .RequireAuthorization()
+        // .RequireAuthorization("EmailVerified")
         .MapToApiVersion(1)
         .WithName(nameof(GetMovieEndpoint));
     }

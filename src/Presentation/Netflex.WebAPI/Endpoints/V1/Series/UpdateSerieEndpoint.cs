@@ -26,7 +26,7 @@ public class UpdateSerieEndpoint : ICarterModule
             await sender.Send(command);
             return Results.Ok();
         })
-        // .RequireAuthorization()
+        // .RequireAuthorization("EmailVerified")
         .MapToApiVersion(1)
         .WithName(nameof(UpdateSerieEndpoint));
     }

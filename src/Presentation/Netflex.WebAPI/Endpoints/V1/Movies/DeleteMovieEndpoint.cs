@@ -14,7 +14,7 @@ public class DeleteMovieEndpoint : ICarterModule
             await sender.Send(command);
             return Results.Ok();
         })
-        // .RequireAuthorization()
+        // .RequireAuthorization("EmailVerified")
         .MapToApiVersion(1)
         .WithName(nameof(DeleteMovieEndpoint));
     }

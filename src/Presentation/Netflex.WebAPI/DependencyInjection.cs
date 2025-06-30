@@ -6,6 +6,7 @@ using HealthChecks.UI.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Netflex.Infrastructure.Settings;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Netflex.WebAPI;
 
@@ -35,7 +36,11 @@ public static class DependencyInjection
             });
 
         services.AddAuthentication(configuration);
-        services.AddAuthorization();
+        services.AddAuthorizationBuilder()
+            .AddPolicy("EmailVerified", policy =>
+            {
+                policy.RequireClaim(JwtRegisteredClaimNames.EmailVerified, "true");
+            });
 
         var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>()
             ?? throw new NotConfiguredException("AllowedOrigins");

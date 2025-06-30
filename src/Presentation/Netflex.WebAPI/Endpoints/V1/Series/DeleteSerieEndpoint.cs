@@ -14,7 +14,7 @@ public class DeleteSerieEndpoint : ICarterModule
             await sender.Send(command);
             return Results.NoContent();
         })
-        // .RequireAuthorization()
+        // .RequireAuthorization("EmailVerified")
         .MapToApiVersion(1)
         .WithName(nameof(DeleteSerieEndpoint));
     }

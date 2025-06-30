@@ -29,7 +29,7 @@ public class CreateMovieEndpoint : ICarterModule
             var result = await sender.Send(command);
             return Results.Ok(result);
         })
-        // .RequireAuthorization()
+        // .RequireAuthorization("EmailVerified")
         .MapToApiVersion(1)
         .WithName(nameof(CreateMovieEndpoint));
     }

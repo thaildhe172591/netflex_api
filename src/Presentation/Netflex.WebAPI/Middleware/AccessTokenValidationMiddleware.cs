@@ -32,13 +32,6 @@ public class AccessTokenValidationMiddleware(RequestDelegate next)
                 if (current != int.Parse(version))
                     throw new ObsoleteAccessTokenException();
             }
-
-            var email = context.User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
-            var emailVerified = context.User.FindFirst(JwtRegisteredClaimNames.EmailVerified)?.Value;
-            if (!bool.TryParse(emailVerified, out var isEmailVerified) || !isEmailVerified)
-            {
-                throw new EmailNotVerifiedException(email);
-            }
         }
 
         await _next(context);

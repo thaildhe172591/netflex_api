@@ -12,7 +12,7 @@ public class GetSerieEndpoint : ICarterModule
             var result = await sender.Send(request.Adapt<GetSerieQuery>());
             return Results.Ok(result);
         })
-        // .RequireAuthorization()
+        // .RequireAuthorization("EmailVerified")
         .MapToApiVersion(1)
         .WithName(nameof(GetSerieEndpoint));
     }
