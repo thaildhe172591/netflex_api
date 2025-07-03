@@ -1,4 +1,4 @@
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Netflex.Application.Interfaces;
 
 namespace Netflex.WebAPI.Endpoints.V1.Auth;

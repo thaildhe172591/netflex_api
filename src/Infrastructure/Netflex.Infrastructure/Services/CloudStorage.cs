@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Http;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Netflex.Application.Interfaces;
 
 namespace Netflex.Infrastructure.Services;

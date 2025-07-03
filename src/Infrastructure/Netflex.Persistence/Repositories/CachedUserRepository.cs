@@ -1,6 +1,7 @@
 using Netflex.Application.Interfaces.Repositories;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
+using Netflex.Application.Common.Constants;
 
 namespace Netflex.Persistence.Repositories;
 
@@ -13,7 +14,7 @@ public class CachedUserRepository(ApplicationDbContext dbContext,
     private const int CACHE_EXPIRES_IN_MINUTES = 15;
     public async Task<int> GetVersionByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var key = $"{nameof(User).ToLowerInvariant()}:{id}:{nameof(User.Version).ToLowerInvariant()}";
+        var key = string.Format(CacheKeys.UserVersionById, id);
         var cached = await _cache.GetStringAsync(key, cancellationToken);
         if (!string.IsNullOrEmpty(cached))
             return JsonSerializer.Deserialize<int>(cached);
@@ -28,7 +29,7 @@ public class CachedUserRepository(ApplicationDbContext dbContext,
     public async Task ResetVersionByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         await _repository.ResetVersionByIdAsync(id, cancellationToken);
-        var key = $"{nameof(User).ToLowerInvariant()}:{id}:{nameof(User.Version).ToLowerInvariant()}";
+        var key = string.Format(CacheKeys.UserVersionById, id);
         await _cache.RemoveAsync(key, cancellationToken);
     }
 }

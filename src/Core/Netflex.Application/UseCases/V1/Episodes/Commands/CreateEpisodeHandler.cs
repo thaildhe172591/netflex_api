@@ -1,5 +1,6 @@
 using Netflex.Domain.Entities;
 using FluentValidation;
+using Netflex.Application.Extensions;
 
 namespace Netflex.Application.UseCases.V1.Episodes.Commands;
 

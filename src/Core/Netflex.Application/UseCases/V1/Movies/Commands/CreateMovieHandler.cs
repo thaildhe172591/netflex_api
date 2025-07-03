@@ -1,4 +1,5 @@
 using FluentValidation;
+using Netflex.Application.Extensions;
 using Netflex.Domain.Entities;
 
 namespace Netflex.Application.UseCases.V1.Movies.Commands;

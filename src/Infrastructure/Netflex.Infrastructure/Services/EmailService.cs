@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Netflex.Application.Interfaces;
 using Netflex.Infrastructure.Exceptions;
 using SendGrid;

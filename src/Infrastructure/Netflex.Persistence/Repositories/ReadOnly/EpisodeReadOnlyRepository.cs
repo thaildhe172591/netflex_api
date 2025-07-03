@@ -1,7 +1,7 @@
 using System.Data;
 using System.Text;
 using Dapper;
-using Netflex.Application.Dtos;
+using Netflex.Application.DTOs;
 using Netflex.Application.Interfaces.Repositories.ReadOnly;
 using Netflex.Shared.Pagination;
 

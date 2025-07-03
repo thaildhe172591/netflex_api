@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using Netflex.Application.Dtos;
+using Netflex.Application.DTOs;
 using Netflex.Application.Interfaces.Repositories;
 namespace Netflex.Persistence.Repositories.ReadOnly;
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Netflex.Application.Validation;
+namespace Netflex.Application.Extensions;
 
 public static class FileResourceValidationExtensions
 {

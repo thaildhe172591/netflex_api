@@ -1,4 +1,5 @@
 using FluentValidation;
+using Netflex.Application.Extensions;
 using Netflex.Domain.Entities;
 using Netflex.Shared.Exceptions;
 

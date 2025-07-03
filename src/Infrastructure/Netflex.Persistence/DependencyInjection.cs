@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Netflex.Application.Interfaces.Repositories.ReadOnly;
 using Netflex.Persistence.Repositories.ReadOnly;
 

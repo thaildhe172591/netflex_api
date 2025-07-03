@@ -1,5 +1,5 @@
 using Netflex.Application.Interfaces.Repositories;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 
 namespace Netflex.Persistence.Repositories;
 

@@ -1,4 +1,4 @@
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Google.Apis.Auth.OAuth2.Flows;
 using Netflex.Domain.ValueObjects;
 using Microsoft.Extensions.Options;

@@ -2,7 +2,7 @@ using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Netflex.Application.Interfaces;
 
 namespace Netflex.Infrastructure;

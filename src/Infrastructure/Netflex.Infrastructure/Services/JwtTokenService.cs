@@ -6,6 +6,7 @@ using Netflex.Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Netflex.Application.Interfaces;
+using Netflex.Application.Common.Constants;
 
 namespace Netflex.Infrastructure.Services;
 
@@ -17,7 +18,6 @@ public class JwtTokenService(IOptions<JwtSettings> options, IDistributedCache ca
 
     public string GenerateJwt(User user, string sessionId)
     {
-
         var accessJti = Guid.NewGuid().ToString();
         var claims = new List<Claim>
         {
@@ -48,7 +48,8 @@ public class JwtTokenService(IOptions<JwtSettings> options, IDistributedCache ca
 
     public async Task AddToBlacklistAsync(string accessJti)
     {
-        await _cache.SetStringAsync($"token:{accessJti}", "1", new DistributedCacheEntryOptions
+        var key = string.Format(CacheKeys.TokenById, accessJti);
+        await _cache.SetStringAsync(key, "1", new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_settings.ExpiresInMinutes)
         });
@@ -56,6 +57,7 @@ public class JwtTokenService(IOptions<JwtSettings> options, IDistributedCache ca
 
     public async Task<bool> IsRevokedAsync(string accessJti)
     {
-        return await _cache.GetStringAsync($"token:{accessJti}") != null;
+        var key = string.Format(CacheKeys.TokenById, accessJti);
+        return await _cache.GetStringAsync(key) != null;
     }
 }

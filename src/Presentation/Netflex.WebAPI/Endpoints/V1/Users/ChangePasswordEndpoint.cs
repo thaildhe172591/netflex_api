@@ -1,6 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Netflex.Application.UseCases.V1.Users.Commands;
 
 namespace Netflex.WebAPI.Endpoints.V1.Users;

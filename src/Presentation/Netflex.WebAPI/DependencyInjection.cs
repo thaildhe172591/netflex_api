@@ -1,6 +1,6 @@
 using Netflex.Shared.Exceptions.Handler;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Netflex.Application.Exceptions;
+using Netflex.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Microsoft.IdentityModel.Tokens;
