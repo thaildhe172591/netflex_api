@@ -12,8 +12,8 @@ public record UpdateMovieCommand(
     IFileResource? Backdrop,
     IFileResource? Video,
     string? CountryIso,
-    TimeSpan? RunTime,
-    DateTime? ReleaseDate,
+    int? Runtime,
+    DateOnly? ReleaseDate,
     ICollection<long>? Actors,
     ICollection<long>? Keywords,
     ICollection<long>? Genres
@@ -74,7 +74,7 @@ public class UpdateMovieHandler(IUnitOfWork unitOfWork, ICloudStorage cloudStora
             request.Overview,
             poster?.ToString(),
             backdrop?.ToString(),
-            request.RunTime,
+            request.Runtime,
             request.ReleaseDate,
             request.CountryIso,
             video?.ToString()

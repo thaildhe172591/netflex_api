@@ -9,8 +9,8 @@ public record MovieDetailDto
     public string? BackdropPath { get; init; }
     public string? VideoUrl { get; init; }
     public string? CountryIso { get; init; }
-    public TimeSpan? RunTime { get; init; }
-    public DateTime? ReleaseDate { get; init; }
+    public int? Runtime { get; init; }
+    public DateOnly? ReleaseDate { get; init; }
     public ICollection<ActorDto>? Actors { get; init; }
     public ICollection<KeywordDto>? Keywords { get; init; }
     public ICollection<KeywordDto>? Genres { get; init; }

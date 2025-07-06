@@ -1,7 +1,5 @@
 using Netflex.Domain.Entities;
 using FluentValidation;
-using Netflex.Application.Extensions;
-
 namespace Netflex.Application.UseCases.V1.Episodes.Commands;
 
 public record CreateEpisodeCommand(
@@ -10,8 +8,8 @@ public record CreateEpisodeCommand(
     long SeriesId,
     string? Overview,
     IFileResource? Video,
-    TimeSpan? Runtime,
-    DateTime? AirDate,
+    int? Runtime,
+    DateOnly? AirDate,
     ICollection<long>? Actors
 ) : IRequest<CreateEpisodeResult>;
 

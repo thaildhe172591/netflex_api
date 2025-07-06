@@ -8,6 +8,6 @@ public record MovieDto(
     string? BackdropPath,
     string? VideoUrl,
     string? CountryIso,
-    TimeSpan? RunTime,
-    DateTime? ReleaseDate
+    int? Runtime,
+    DateOnly? ReleaseDate
 );

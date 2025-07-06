@@ -8,6 +8,6 @@ public record SerieDto
     string? PosterPath,
     string? BackdropPath,
     string? CountryIso,
-    DateTime? FirstAirDate,
-    DateTime? LastAirDate
+    DateOnly? FirstAirDate,
+    DateOnly? LastAirDate
 );

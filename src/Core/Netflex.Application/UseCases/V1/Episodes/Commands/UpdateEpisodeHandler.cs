@@ -12,8 +12,8 @@ public record UpdateEpisodeCommand(
     long? SeriesId,
     string? Overview,
     IFileResource? Video,
-    TimeSpan? Runtime,
-    DateTime? AirDate,
+    int? Runtime,
+    DateOnly? AirDate,
     ICollection<long>? Actors
 ) : IRequest<UpdateEpisodeResult>;
 

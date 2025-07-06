@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Netflex.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class V0_0_1_InitialSchema : Migration
+    public partial class V1_InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,13 +38,13 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
+                    genre_id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_genres", x => x.id);
+                    table.PrimaryKey("pk_genres", x => x.genre_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,13 +52,13 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    id = table.Column<long>(type: "bigint", nullable: false)
+                    keyword_id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_keywords", x => x.id);
+                    table.PrimaryKey("pk_keywords", x => x.keyword_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,8 +74,8 @@ namespace Netflex.Persistence.Migrations
                     backdrop_path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     video_url = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     country_iso = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    run_time = table.Column<TimeSpan>(type: "interval", nullable: true),
-                    release_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    runtime = table.Column<int>(type: "integer", nullable: true),
+                    release_date = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -112,6 +112,26 @@ namespace Netflex.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "reports",
+                schema: "dbo",
+                columns: table => new
+                {
+                    report_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    reason = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    description = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    process = table.Column<string>(type: "text", nullable: false, defaultValue: "Open"),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    created_by = table.Column<string>(type: "text", nullable: true),
+                    last_modified_by = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_reports", x => x.report_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "roles",
                 schema: "dbo",
                 columns: table => new
@@ -136,8 +156,8 @@ namespace Netflex.Persistence.Migrations
                     poster_path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     backdrop_path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     country_iso = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    first_air_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    last_air_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    first_air_date = table.Column<DateOnly>(type: "date", nullable: true),
+                    last_air_date = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -165,15 +185,15 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    actors_id = table.Column<long>(type: "bigint", nullable: false),
+                    actor_id = table.Column<long>(type: "bigint", nullable: false),
                     movie_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_movie_actors", x => new { x.actors_id, x.movie_id });
+                    table.PrimaryKey("pk_movie_actors", x => new { x.actor_id, x.movie_id });
                     table.ForeignKey(
-                        name: "fk_movie_actors_actors_actors_id",
-                        column: x => x.actors_id,
+                        name: "fk_movie_actors_actors_actor_id",
+                        column: x => x.actor_id,
                         principalSchema: "dbo",
                         principalTable: "actors",
                         principalColumn: "actor_id",
@@ -192,18 +212,18 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    genres_id = table.Column<long>(type: "bigint", nullable: false),
+                    genre_id = table.Column<long>(type: "bigint", nullable: false),
                     movie_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_movie_genres", x => new { x.genres_id, x.movie_id });
+                    table.PrimaryKey("pk_movie_genres", x => new { x.genre_id, x.movie_id });
                     table.ForeignKey(
-                        name: "fk_movie_genres_genres_genres_id",
-                        column: x => x.genres_id,
+                        name: "fk_movie_genres_genres_genre_id",
+                        column: x => x.genre_id,
                         principalSchema: "dbo",
                         principalTable: "genres",
-                        principalColumn: "id",
+                        principalColumn: "genre_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_movie_genres_movies_movie_id",
@@ -219,18 +239,18 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    keywords_id = table.Column<long>(type: "bigint", nullable: false),
+                    keyword_id = table.Column<long>(type: "bigint", nullable: false),
                     movie_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_movie_keywords", x => new { x.keywords_id, x.movie_id });
+                    table.PrimaryKey("pk_movie_keywords", x => new { x.keyword_id, x.movie_id });
                     table.ForeignKey(
-                        name: "fk_movie_keywords_keywords_keywords_id",
-                        column: x => x.keywords_id,
+                        name: "fk_movie_keywords_keywords_keyword_id",
+                        column: x => x.keyword_id,
                         principalSchema: "dbo",
                         principalTable: "keywords",
-                        principalColumn: "id",
+                        principalColumn: "keyword_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_movie_keywords_movies_movie_id",
@@ -246,22 +266,22 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    permissions_id = table.Column<string>(type: "text", nullable: false),
-                    roles_id = table.Column<string>(type: "text", nullable: false)
+                    permission_id = table.Column<string>(type: "text", nullable: false),
+                    role_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_permissions", x => new { x.permissions_id, x.roles_id });
+                    table.PrimaryKey("pk_role_permissions", x => new { x.permission_id, x.role_id });
                     table.ForeignKey(
-                        name: "fk_role_permissions_permissions_permissions_id",
-                        column: x => x.permissions_id,
+                        name: "fk_role_permissions_permissions_permission_id",
+                        column: x => x.permission_id,
                         principalSchema: "dbo",
                         principalTable: "permissions",
                         principalColumn: "permission_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_role_permissions_roles_roles_id",
-                        column: x => x.roles_id,
+                        name: "fk_role_permissions_roles_role_id",
+                        column: x => x.role_id,
                         principalSchema: "dbo",
                         principalTable: "roles",
                         principalColumn: "role_id",
@@ -279,8 +299,8 @@ namespace Netflex.Persistence.Migrations
                     episode_number = table.Column<int>(type: "integer", nullable: false),
                     overview = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
                     video_url = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    runtime = table.Column<TimeSpan>(type: "interval", nullable: true),
-                    air_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    runtime = table.Column<int>(type: "integer", nullable: true),
+                    air_date = table.Column<DateOnly>(type: "date", nullable: true),
                     series_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -300,18 +320,18 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    genres_id = table.Column<long>(type: "bigint", nullable: false),
+                    genre_id = table.Column<long>(type: "bigint", nullable: false),
                     tv_serie_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_tv_serie_genres", x => new { x.genres_id, x.tv_serie_id });
+                    table.PrimaryKey("pk_tv_serie_genres", x => new { x.genre_id, x.tv_serie_id });
                     table.ForeignKey(
-                        name: "fk_tv_serie_genres_genres_genres_id",
-                        column: x => x.genres_id,
+                        name: "fk_tv_serie_genres_genres_genre_id",
+                        column: x => x.genre_id,
                         principalSchema: "dbo",
                         principalTable: "genres",
-                        principalColumn: "id",
+                        principalColumn: "genre_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_tv_serie_genres_tv_series_tv_serie_id",
@@ -327,18 +347,18 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    keywords_id = table.Column<long>(type: "bigint", nullable: false),
+                    keyword_id = table.Column<long>(type: "bigint", nullable: false),
                     tv_serie_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_tv_serie_keywords", x => new { x.keywords_id, x.tv_serie_id });
+                    table.PrimaryKey("pk_tv_serie_keywords", x => new { x.keyword_id, x.tv_serie_id });
                     table.ForeignKey(
-                        name: "fk_tv_serie_keywords_keywords_keywords_id",
-                        column: x => x.keywords_id,
+                        name: "fk_tv_serie_keywords_keywords_keyword_id",
+                        column: x => x.keyword_id,
                         principalSchema: "dbo",
                         principalTable: "keywords",
-                        principalColumn: "id",
+                        principalColumn: "keyword_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_tv_serie_keywords_tv_series_tv_serie_id",
@@ -450,22 +470,22 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    permissions_id = table.Column<string>(type: "text", nullable: false),
-                    users_id = table.Column<string>(type: "text", nullable: false)
+                    permission_id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_user_permissions", x => new { x.permissions_id, x.users_id });
+                    table.PrimaryKey("pk_user_permissions", x => new { x.permission_id, x.user_id });
                     table.ForeignKey(
-                        name: "fk_user_permissions_permissions_permissions_id",
-                        column: x => x.permissions_id,
+                        name: "fk_user_permissions_permissions_permission_id",
+                        column: x => x.permission_id,
                         principalSchema: "dbo",
                         principalTable: "permissions",
                         principalColumn: "permission_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_user_permissions_users_users_id",
-                        column: x => x.users_id,
+                        name: "fk_user_permissions_users_user_id",
+                        column: x => x.user_id,
                         principalSchema: "dbo",
                         principalTable: "users",
                         principalColumn: "user_id",
@@ -477,22 +497,22 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    roles_id = table.Column<string>(type: "text", nullable: false),
-                    users_id = table.Column<string>(type: "text", nullable: false)
+                    role_id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_user_roles", x => new { x.roles_id, x.users_id });
+                    table.PrimaryKey("pk_user_roles", x => new { x.role_id, x.user_id });
                     table.ForeignKey(
-                        name: "fk_user_roles_roles_roles_id",
-                        column: x => x.roles_id,
+                        name: "fk_user_roles_roles_role_id",
+                        column: x => x.role_id,
                         principalSchema: "dbo",
                         principalTable: "roles",
                         principalColumn: "role_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_user_roles_users_users_id",
-                        column: x => x.users_id,
+                        name: "fk_user_roles_users_user_id",
+                        column: x => x.user_id,
                         principalSchema: "dbo",
                         principalTable: "users",
                         principalColumn: "user_id",
@@ -530,15 +550,15 @@ namespace Netflex.Persistence.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    actors_id = table.Column<long>(type: "bigint", nullable: false),
+                    actor_id = table.Column<long>(type: "bigint", nullable: false),
                     episode_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_episode_actors", x => new { x.actors_id, x.episode_id });
+                    table.PrimaryKey("pk_episode_actors", x => new { x.actor_id, x.episode_id });
                     table.ForeignKey(
-                        name: "fk_episode_actors_actors_actors_id",
-                        column: x => x.actors_id,
+                        name: "fk_episode_actors_actors_actor_id",
+                        column: x => x.actor_id,
                         principalSchema: "dbo",
                         principalTable: "actors",
                         principalColumn: "actor_id",
@@ -604,10 +624,10 @@ namespace Netflex.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_permissions_roles_id",
+                name: "ix_role_permissions_role_id",
                 schema: "dbo",
                 table: "role_permissions",
-                column: "roles_id");
+                column: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_roles_name",
@@ -641,16 +661,16 @@ namespace Netflex.Persistence.Migrations
                 column: "notification_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_user_permissions_users_id",
+                name: "ix_user_permissions_user_id",
                 schema: "dbo",
                 table: "user_permissions",
-                column: "users_id");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_user_roles_users_id",
+                name: "ix_user_roles_user_id",
                 schema: "dbo",
                 table: "user_roles",
-                column: "users_id");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_user_sessions_user_id_device_id",
@@ -689,6 +709,10 @@ namespace Netflex.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "movie_keywords",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "reports",
                 schema: "dbo");
 
             migrationBuilder.DropTable(

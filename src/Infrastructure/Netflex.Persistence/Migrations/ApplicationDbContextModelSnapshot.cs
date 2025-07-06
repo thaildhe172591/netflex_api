@@ -71,8 +71,8 @@ namespace Netflex.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime?>("AirDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("AirDate")
+                        .HasColumnType("date")
                         .HasColumnName("air_date");
 
                     b.Property<int>("EpisodeNumber")
@@ -90,8 +90,8 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(1024)")
                         .HasColumnName("overview");
 
-                    b.Property<TimeSpan?>("Runtime")
-                        .HasColumnType("interval")
+                    b.Property<int?>("Runtime")
+                        .HasColumnType("integer")
                         .HasColumnName("runtime");
 
                     b.Property<long>("SeriesId")
@@ -214,13 +214,13 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("poster_path");
 
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("ReleaseDate")
+                        .HasColumnType("date")
                         .HasColumnName("release_date");
 
-                    b.Property<TimeSpan?>("RunTime")
-                        .HasColumnType("interval")
-                        .HasColumnName("run_time");
+                    b.Property<int?>("Runtime")
+                        .HasColumnType("integer")
+                        .HasColumnName("runtime");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -419,12 +419,12 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(3)")
                         .HasColumnName("country_iso");
 
-                    b.Property<DateTime?>("FirstAirDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("FirstAirDate")
+                        .HasColumnType("date")
                         .HasColumnName("first_air_date");
 
-                    b.Property<DateTime?>("LastAirDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("LastAirDate")
+                        .HasColumnType("date")
                         .HasColumnName("last_air_date");
 
                     b.Property<string>("Name")

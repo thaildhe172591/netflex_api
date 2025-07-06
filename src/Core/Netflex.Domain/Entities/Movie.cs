@@ -8,20 +8,20 @@ public class Movie : Aggregate<long>
     public string? BackdropPath { get; set; }
     public string? VideoUrl { get; set; }
     public string? CountryIso { get; set; }
-    public TimeSpan? RunTime { get; set; }
-    public DateTime? ReleaseDate { get; set; }
+    public int? Runtime { get; set; }
+    public DateOnly? ReleaseDate { get; set; }
     public virtual ICollection<Actor> Actors { get; set; } = [];
     public virtual ICollection<Keyword> Keywords { get; set; } = [];
     public virtual ICollection<Genre> Genres { get; set; } = [];
     public static Movie Create(string title, string? overview = default, string? posterPath = default,
-        string? backdropPath = default, TimeSpan? runTime = default, DateTime? releaseDate = default,
+        string? backdropPath = default, int? runtime = default, DateOnly? releaseDate = default,
             string? countryIso = default, string? videoUrl = default)
     {
         var movie = new Movie()
         {
             Title = title,
-            RunTime = runTime,
-            ReleaseDate = releaseDate?.ToUniversalTime(),
+            Runtime = runtime,
+            ReleaseDate = releaseDate,
             Overview = overview,
             PosterPath = posterPath,
             BackdropPath = backdropPath,
@@ -33,7 +33,7 @@ public class Movie : Aggregate<long>
     }
 
     public void Update(string? title, string? overview, string? posterPath, string? backdropPath,
-        TimeSpan? runTime, DateTime? releaseDate, string? countryIso, string? videoUrl)
+        int? runtime, DateOnly? releaseDate, string? countryIso, string? videoUrl)
     {
         Title = title ?? Title;
         Overview = overview ?? Overview;
@@ -41,8 +41,8 @@ public class Movie : Aggregate<long>
         BackdropPath = backdropPath ?? BackdropPath;
         VideoUrl = videoUrl ?? VideoUrl;
         CountryIso = countryIso ?? CountryIso;
-        RunTime = runTime ?? RunTime;
-        ReleaseDate = releaseDate?.ToUniversalTime() ?? ReleaseDate;
+        Runtime = runtime ?? Runtime;
+        ReleaseDate = releaseDate ?? ReleaseDate;
     }
 
     public void AssignActors(IEnumerable<Actor> actors)

@@ -1,5 +1,4 @@
 using FluentValidation;
-using Netflex.Application.Extensions;
 using Netflex.Domain.Entities;
 
 namespace Netflex.Application.UseCases.V1.Series.Commands;
@@ -10,8 +9,8 @@ public record CreateSerieCommand(
     IFileResource? Poster,
     IFileResource? Backdrop,
     string? CountryIso,
-    DateTime? FirstAirDate,
-    DateTime? LastAirDate,
+    DateOnly? FirstAirDate,
+    DateOnly? LastAirDate,
     ICollection<long>? Keywords,
     ICollection<long>? Genres
 ) : ICommand<CreateSerieResult>;

@@ -12,8 +12,8 @@ public record UpdateSerieCommand(
     IFileResource? Poster,
     IFileResource? Backdrop,
     string? CountryIso,
-    DateTime? FirstAirDate,
-    DateTime? LastAirDate,
+    DateOnly? FirstAirDate,
+    DateOnly? LastAirDate,
     ICollection<long>? Keywords,
     ICollection<long>? Genres
 ) : ICommand<UpdateSerieResult>;

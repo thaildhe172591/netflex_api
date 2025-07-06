@@ -6,12 +6,12 @@ public class Episode : Aggregate<long>
     public int EpisodeNumber { get; set; }
     public string? Overview { get; set; }
     public string? VideoUrl { get; set; }
-    public TimeSpan? Runtime { get; set; }
-    public DateTime? AirDate { get; set; }
+    public int? Runtime { get; set; }
+    public DateOnly? AirDate { get; set; }
     public required long SeriesId { get; set; }
     public virtual ICollection<Actor> Actors { get; set; } = [];
     public static Episode Create(string name, int episodeNumber, long seriesId, string? overview = default,
-        string? videoUrl = default, TimeSpan? runtime = default, DateTime? airDate = default)
+        string? videoUrl = default, int? runtime = default, DateOnly? airDate = default)
     {
         var episode = new Episode()
         {
@@ -21,7 +21,7 @@ public class Episode : Aggregate<long>
             Overview = overview,
             VideoUrl = videoUrl,
             Runtime = runtime,
-            AirDate = airDate?.ToUniversalTime()
+            AirDate = airDate
         };
         episode.AddDomainEvent(new EpisodeCreatedEvent(episode));
         return episode;
@@ -38,7 +38,7 @@ public class Episode : Aggregate<long>
     }
 
     public void Update(string? name, int? episodeNumber, long? seriesId, string? overview,
-        string? videoUrl, TimeSpan? runtime, DateTime? airDate)
+        string? videoUrl, int? runtime, DateOnly? airDate)
     {
         Name = name ?? Name;
         EpisodeNumber = episodeNumber ?? EpisodeNumber;
@@ -46,6 +46,6 @@ public class Episode : Aggregate<long>
         Overview = overview ?? Overview;
         VideoUrl = videoUrl ?? VideoUrl;
         Runtime = runtime ?? Runtime;
-        AirDate = airDate?.ToUniversalTime() ?? AirDate;
+        AirDate = airDate ?? AirDate;
     }
 }

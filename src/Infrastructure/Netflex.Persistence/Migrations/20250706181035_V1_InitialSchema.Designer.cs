@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Netflex.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250622171506_V0_0_2_AddReportEntity")]
-    partial class V0_0_2_AddReportEntity
+    [Migration("20250706181035_V1_InitialSchema")]
+    partial class V1_InitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,8 +74,8 @@ namespace Netflex.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime?>("AirDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("AirDate")
+                        .HasColumnType("date")
                         .HasColumnName("air_date");
 
                     b.Property<int>("EpisodeNumber")
@@ -93,8 +93,8 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(1024)")
                         .HasColumnName("overview");
 
-                    b.Property<TimeSpan?>("Runtime")
-                        .HasColumnType("interval")
+                    b.Property<int?>("Runtime")
+                        .HasColumnType("integer")
                         .HasColumnName("runtime");
 
                     b.Property<long>("SeriesId")
@@ -217,13 +217,13 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("poster_path");
 
-                    b.Property<DateTime?>("ReleaseDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("ReleaseDate")
+                        .HasColumnType("date")
                         .HasColumnName("release_date");
 
-                    b.Property<TimeSpan?>("RunTime")
-                        .HasColumnType("interval")
-                        .HasColumnName("run_time");
+                    b.Property<int?>("Runtime")
+                        .HasColumnType("integer")
+                        .HasColumnName("runtime");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -422,12 +422,12 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(3)")
                         .HasColumnName("country_iso");
 
-                    b.Property<DateTime?>("FirstAirDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("FirstAirDate")
+                        .HasColumnType("date")
                         .HasColumnName("first_air_date");
 
-                    b.Property<DateTime?>("LastAirDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("LastAirDate")
+                        .HasColumnType("date")
                         .HasColumnName("last_air_date");
 
                     b.Property<string>("Name")
@@ -588,18 +588,18 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("episode_actors", b =>
                 {
-                    b.Property<long>("ActorsId")
+                    b.Property<long>("actor_id")
                         .HasColumnType("bigint")
-                        .HasColumnName("actors_id");
+                        .HasColumnName("actor_id");
 
-                    b.Property<long>("EpisodeId")
+                    b.Property<long>("episode_id")
                         .HasColumnType("bigint")
                         .HasColumnName("episode_id");
 
-                    b.HasKey("ActorsId", "EpisodeId")
+                    b.HasKey("actor_id", "episode_id")
                         .HasName("pk_episode_actors");
 
-                    b.HasIndex("EpisodeId")
+                    b.HasIndex("episode_id")
                         .HasDatabaseName("ix_episode_actors_episode_id");
 
                     b.ToTable("episode_actors", "dbo");
@@ -607,18 +607,18 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("movie_actors", b =>
                 {
-                    b.Property<long>("ActorsId")
+                    b.Property<long>("actor_id")
                         .HasColumnType("bigint")
-                        .HasColumnName("actors_id");
+                        .HasColumnName("actor_id");
 
-                    b.Property<long>("MovieId")
+                    b.Property<long>("movie_id")
                         .HasColumnType("bigint")
                         .HasColumnName("movie_id");
 
-                    b.HasKey("ActorsId", "MovieId")
+                    b.HasKey("actor_id", "movie_id")
                         .HasName("pk_movie_actors");
 
-                    b.HasIndex("MovieId")
+                    b.HasIndex("movie_id")
                         .HasDatabaseName("ix_movie_actors_movie_id");
 
                     b.ToTable("movie_actors", "dbo");
@@ -626,18 +626,18 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("movie_genres", b =>
                 {
-                    b.Property<long>("GenresId")
+                    b.Property<long>("genre_id")
                         .HasColumnType("bigint")
-                        .HasColumnName("genres_id");
+                        .HasColumnName("genre_id");
 
-                    b.Property<long>("MovieId")
+                    b.Property<long>("movie_id")
                         .HasColumnType("bigint")
                         .HasColumnName("movie_id");
 
-                    b.HasKey("GenresId", "MovieId")
+                    b.HasKey("genre_id", "movie_id")
                         .HasName("pk_movie_genres");
 
-                    b.HasIndex("MovieId")
+                    b.HasIndex("movie_id")
                         .HasDatabaseName("ix_movie_genres_movie_id");
 
                     b.ToTable("movie_genres", "dbo");
@@ -645,18 +645,18 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("movie_keywords", b =>
                 {
-                    b.Property<long>("KeywordsId")
+                    b.Property<long>("keyword_id")
                         .HasColumnType("bigint")
-                        .HasColumnName("keywords_id");
+                        .HasColumnName("keyword_id");
 
-                    b.Property<long>("MovieId")
+                    b.Property<long>("movie_id")
                         .HasColumnType("bigint")
                         .HasColumnName("movie_id");
 
-                    b.HasKey("KeywordsId", "MovieId")
+                    b.HasKey("keyword_id", "movie_id")
                         .HasName("pk_movie_keywords");
 
-                    b.HasIndex("MovieId")
+                    b.HasIndex("movie_id")
                         .HasDatabaseName("ix_movie_keywords_movie_id");
 
                     b.ToTable("movie_keywords", "dbo");
@@ -664,37 +664,37 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("role_permissions", b =>
                 {
-                    b.Property<string>("PermissionsId")
+                    b.Property<string>("permission_id")
                         .HasColumnType("text")
-                        .HasColumnName("permissions_id");
+                        .HasColumnName("permission_id");
 
-                    b.Property<string>("RolesId")
+                    b.Property<string>("role_id")
                         .HasColumnType("text")
-                        .HasColumnName("roles_id");
+                        .HasColumnName("role_id");
 
-                    b.HasKey("PermissionsId", "RolesId")
+                    b.HasKey("permission_id", "role_id")
                         .HasName("pk_role_permissions");
 
-                    b.HasIndex("RolesId")
-                        .HasDatabaseName("ix_role_permissions_roles_id");
+                    b.HasIndex("role_id")
+                        .HasDatabaseName("ix_role_permissions_role_id");
 
                     b.ToTable("role_permissions", "dbo");
                 });
 
             modelBuilder.Entity("tv_serie_genres", b =>
                 {
-                    b.Property<long>("GenresId")
+                    b.Property<long>("genre_id")
                         .HasColumnType("bigint")
-                        .HasColumnName("genres_id");
+                        .HasColumnName("genre_id");
 
-                    b.Property<long>("TVSerieId")
+                    b.Property<long>("tv_serie_id")
                         .HasColumnType("bigint")
                         .HasColumnName("tv_serie_id");
 
-                    b.HasKey("GenresId", "TVSerieId")
+                    b.HasKey("genre_id", "tv_serie_id")
                         .HasName("pk_tv_serie_genres");
 
-                    b.HasIndex("TVSerieId")
+                    b.HasIndex("tv_serie_id")
                         .HasDatabaseName("ix_tv_serie_genres_tv_serie_id");
 
                     b.ToTable("tv_serie_genres", "dbo");
@@ -702,18 +702,18 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("tv_serie_keywords", b =>
                 {
-                    b.Property<long>("KeywordsId")
+                    b.Property<long>("keyword_id")
                         .HasColumnType("bigint")
-                        .HasColumnName("keywords_id");
+                        .HasColumnName("keyword_id");
 
-                    b.Property<long>("TVSerieId")
+                    b.Property<long>("tv_serie_id")
                         .HasColumnType("bigint")
                         .HasColumnName("tv_serie_id");
 
-                    b.HasKey("KeywordsId", "TVSerieId")
+                    b.HasKey("keyword_id", "tv_serie_id")
                         .HasName("pk_tv_serie_keywords");
 
-                    b.HasIndex("TVSerieId")
+                    b.HasIndex("tv_serie_id")
                         .HasDatabaseName("ix_tv_serie_keywords_tv_serie_id");
 
                     b.ToTable("tv_serie_keywords", "dbo");
@@ -721,38 +721,38 @@ namespace Netflex.Persistence.Migrations
 
             modelBuilder.Entity("user_permissions", b =>
                 {
-                    b.Property<string>("PermissionsId")
+                    b.Property<string>("permission_id")
                         .HasColumnType("text")
-                        .HasColumnName("permissions_id");
+                        .HasColumnName("permission_id");
 
-                    b.Property<string>("UsersId")
+                    b.Property<string>("user_id")
                         .HasColumnType("text")
-                        .HasColumnName("users_id");
+                        .HasColumnName("user_id");
 
-                    b.HasKey("PermissionsId", "UsersId")
+                    b.HasKey("permission_id", "user_id")
                         .HasName("pk_user_permissions");
 
-                    b.HasIndex("UsersId")
-                        .HasDatabaseName("ix_user_permissions_users_id");
+                    b.HasIndex("user_id")
+                        .HasDatabaseName("ix_user_permissions_user_id");
 
                     b.ToTable("user_permissions", "dbo");
                 });
 
             modelBuilder.Entity("user_roles", b =>
                 {
-                    b.Property<string>("RolesId")
+                    b.Property<string>("role_id")
                         .HasColumnType("text")
-                        .HasColumnName("roles_id");
+                        .HasColumnName("role_id");
 
-                    b.Property<string>("UsersId")
+                    b.Property<string>("user_id")
                         .HasColumnType("text")
-                        .HasColumnName("users_id");
+                        .HasColumnName("user_id");
 
-                    b.HasKey("RolesId", "UsersId")
+                    b.HasKey("role_id", "user_id")
                         .HasName("pk_user_roles");
 
-                    b.HasIndex("UsersId")
-                        .HasDatabaseName("ix_user_roles_users_id");
+                    b.HasIndex("user_id")
+                        .HasDatabaseName("ix_user_roles_user_id");
 
                     b.ToTable("user_roles", "dbo");
                 });
@@ -828,14 +828,14 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Actor", null)
                         .WithMany()
-                        .HasForeignKey("ActorsId")
+                        .HasForeignKey("actor_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_episode_actors_actors_actors_id");
+                        .HasConstraintName("fk_episode_actors_actors_actor_id");
 
                     b.HasOne("Netflex.Domain.Entities.Episode", null)
                         .WithMany()
-                        .HasForeignKey("EpisodeId")
+                        .HasForeignKey("episode_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_episode_actors_episodes_episode_id");
@@ -845,14 +845,14 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Actor", null)
                         .WithMany()
-                        .HasForeignKey("ActorsId")
+                        .HasForeignKey("actor_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_movie_actors_actors_actors_id");
+                        .HasConstraintName("fk_movie_actors_actors_actor_id");
 
                     b.HasOne("Netflex.Domain.Entities.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("movie_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_movie_actors_movies_movie_id");
@@ -862,14 +862,14 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Genre", null)
                         .WithMany()
-                        .HasForeignKey("GenresId")
+                        .HasForeignKey("genre_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_movie_genres_genres_genres_id");
+                        .HasConstraintName("fk_movie_genres_genres_genre_id");
 
                     b.HasOne("Netflex.Domain.Entities.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("movie_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_movie_genres_movies_movie_id");
@@ -879,14 +879,14 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Keyword", null)
                         .WithMany()
-                        .HasForeignKey("KeywordsId")
+                        .HasForeignKey("keyword_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_movie_keywords_keywords_keywords_id");
+                        .HasConstraintName("fk_movie_keywords_keywords_keyword_id");
 
                     b.HasOne("Netflex.Domain.Entities.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("movie_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_movie_keywords_movies_movie_id");
@@ -896,31 +896,31 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Permission", null)
                         .WithMany()
-                        .HasForeignKey("PermissionsId")
+                        .HasForeignKey("permission_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_role_permissions_permissions_permissions_id");
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
 
                     b.HasOne("Netflex.Domain.Entities.Role", null)
                         .WithMany()
-                        .HasForeignKey("RolesId")
+                        .HasForeignKey("role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_role_permissions_roles_roles_id");
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
                 });
 
             modelBuilder.Entity("tv_serie_genres", b =>
                 {
                     b.HasOne("Netflex.Domain.Entities.Genre", null)
                         .WithMany()
-                        .HasForeignKey("GenresId")
+                        .HasForeignKey("genre_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_tv_serie_genres_genres_genres_id");
+                        .HasConstraintName("fk_tv_serie_genres_genres_genre_id");
 
                     b.HasOne("Netflex.Domain.Entities.TVSerie", null)
                         .WithMany()
-                        .HasForeignKey("TVSerieId")
+                        .HasForeignKey("tv_serie_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tv_serie_genres_tv_series_tv_serie_id");
@@ -930,14 +930,14 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Keyword", null)
                         .WithMany()
-                        .HasForeignKey("KeywordsId")
+                        .HasForeignKey("keyword_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_tv_serie_keywords_keywords_keywords_id");
+                        .HasConstraintName("fk_tv_serie_keywords_keywords_keyword_id");
 
                     b.HasOne("Netflex.Domain.Entities.TVSerie", null)
                         .WithMany()
-                        .HasForeignKey("TVSerieId")
+                        .HasForeignKey("tv_serie_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tv_serie_keywords_tv_series_tv_serie_id");
@@ -947,34 +947,34 @@ namespace Netflex.Persistence.Migrations
                 {
                     b.HasOne("Netflex.Domain.Entities.Permission", null)
                         .WithMany()
-                        .HasForeignKey("PermissionsId")
+                        .HasForeignKey("permission_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_user_permissions_permissions_permissions_id");
+                        .HasConstraintName("fk_user_permissions_permissions_permission_id");
 
                     b.HasOne("Netflex.Domain.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_user_permissions_users_users_id");
+                        .HasConstraintName("fk_user_permissions_users_user_id");
                 });
 
             modelBuilder.Entity("user_roles", b =>
                 {
                     b.HasOne("Netflex.Domain.Entities.Role", null)
                         .WithMany()
-                        .HasForeignKey("RolesId")
+                        .HasForeignKey("role_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_user_roles_roles_roles_id");
+                        .HasConstraintName("fk_user_roles_roles_role_id");
 
                     b.HasOne("Netflex.Domain.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_user_roles_users_users_id");
+                        .HasConstraintName("fk_user_roles_users_user_id");
                 });
 
             modelBuilder.Entity("Netflex.Domain.Entities.User", b =>

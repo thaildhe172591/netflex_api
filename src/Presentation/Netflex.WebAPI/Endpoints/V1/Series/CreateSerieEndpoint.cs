@@ -10,8 +10,8 @@ public record CreateSerieRequest
     public IFormFile? Poster { get; init; }
     public IFormFile? Backdrop { get; init; }
     public string? CountryIso { get; init; }
-    public DateTime? FirstAirDate { get; init; }
-    public DateTime? LastAirDate { get; init; }
+    public DateOnly? FirstAirDate { get; init; }
+    public DateOnly? LastAirDate { get; init; }
     public ICollection<long>? Keywords { get; init; }
     public ICollection<long>? Genres { get; init; }
 }

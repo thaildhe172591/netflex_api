@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Netflex.Domain.ValueObjects;
 
 namespace Netflex.Persistence.Configurations;
 
@@ -34,7 +33,7 @@ public class MovieConfiguration
         builder.Property(m => m.CountryIso)
             .HasMaxLength(3);
 
-        builder.Property(m => m.RunTime);
+        builder.Property(m => m.Runtime);
 
         builder.Property(m => m.ReleaseDate);
 

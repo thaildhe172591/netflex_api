@@ -10,8 +10,8 @@ public record CreateEpisodeRequest
     public required long SeriesId { get; init; }
     public string? Overview { get; init; }
     public IFormFile? Video { get; init; }
-    public TimeSpan? Runtime { get; init; }
-    public DateTime? AirDate { get; init; }
+    public int? Runtime { get; init; }
+    public DateOnly? AirDate { get; init; }
     public ICollection<long>? Actors { get; init; }
 }
 public record CreateEpisodeResponse(long Id);
