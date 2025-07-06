@@ -41,8 +41,10 @@ public class UpdateEpisodeHandler(IUnitOfWork unitOfWork, ICloudStorage storage)
     public async Task<UpdateEpisodeResult> Handle(UpdateEpisodeCommand request, CancellationToken cancellationToken)
     {
         var episodeRepository = _unitOfWork.Repository<Episode>();
-        var episode = await episodeRepository.GetAsync(x => x.Id == request.Id, cancellationToken: cancellationToken)
-            ?? throw new NotFoundException(nameof(Episode), request.Id);
+        var episode = await episodeRepository.GetAsync(x => x.Id == request.Id,
+            includeProperties: string.Join(",", [nameof(Episode.Actors)]),
+            cancellationToken: cancellationToken)
+                ?? throw new NotFoundException(nameof(Episode), request.Id);
         var video = request.Video != null
             ? await _storage.UploadAsync("episode", request.Video) : null;
 

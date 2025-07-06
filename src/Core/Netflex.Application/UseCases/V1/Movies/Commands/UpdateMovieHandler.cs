@@ -38,9 +38,10 @@ public class UpdateMovieHandler(IUnitOfWork unitOfWork, ICloudStorage cloudStora
     public async Task<UpdateMovieResult> Handle(UpdateMovieCommand request, CancellationToken cancellationToken)
     {
         var movieRepository = _unitOfWork.Repository<Movie>();
-        var movie = await movieRepository
-            .GetAsync(m => m.Id == request.Id, cancellationToken: cancellationToken)
-            ?? throw new NotFoundException(nameof(Movie), request.Id);
+        var movie = await movieRepository.GetAsync(m => m.Id == request.Id,
+            includeProperties: string.Join(",", [nameof(Movie.Actors), nameof(Movie.Keywords), nameof(Movie.Genres)]),
+            cancellationToken: cancellationToken)
+                ?? throw new NotFoundException(nameof(Movie), request.Id);
 
         Uri? poster = null, backdrop = null, video = null;
         var tasks = new List<Task>();

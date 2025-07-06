@@ -30,7 +30,7 @@ public class SigninHandler(IJwtTokenService jwtTokenService, IRefreshOptions ref
         //STEP 1: Check user credentials 
         var user = await _unitOfWork.Repository<Domain.Entities.User>()
             .GetAsync(u => u.Email == Email.Of(request.Email),
-                includeProperties: nameof(User.Roles) + "," + nameof(User.Permissions),
+                includeProperties: string.Join(",", [nameof(User.Roles), nameof(User.Permissions)]),
                 cancellationToken: cancellationToken)
             ?? throw new IncorrectEmailOrPasswordException();
 
