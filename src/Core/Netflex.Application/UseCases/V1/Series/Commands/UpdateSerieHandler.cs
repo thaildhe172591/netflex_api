@@ -42,7 +42,7 @@ public class UpdateSerieHandler(IUnitOfWork unitOfWork, ICloudStorage cloudStora
         var serieRepository = _unitOfWork.Repository<TVSerie>();
 
         var serie = await serieRepository.GetAsync(m => m.Id == request.Id,
-            includeProperties: string.Join(",", [nameof(TVSerie.Keywords), nameof(TVSerie.Genres)]),
+            includeProperties: [nameof(TVSerie.Keywords), nameof(TVSerie.Genres)],
             cancellationToken: cancellationToken)
                 ?? throw new NotFoundException(nameof(TVSerie), request.Id);
 

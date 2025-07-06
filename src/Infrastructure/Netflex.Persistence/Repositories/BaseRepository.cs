@@ -20,7 +20,7 @@ public class BaseRepository<T>(ApplicationDbContext dbContext)
     public T? Get(object id) => _dbContext.Set<T>().Find(id);
 
     public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate,
-        string? includeProperties = default, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = default,
+        string[]? includeProperties = default, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = default,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbContext.Set<T>();
@@ -28,7 +28,7 @@ public class BaseRepository<T>(ApplicationDbContext dbContext)
 
         if (includeProperties != null)
         {
-            foreach (var property in includeProperties.Split([','], StringSplitOptions.RemoveEmptyEntries))
+            foreach (var property in includeProperties)
                 query = query.Include(property);
         }
         if (orderBy != null) query = orderBy(query);
@@ -36,7 +36,7 @@ public class BaseRepository<T>(ApplicationDbContext dbContext)
     }
 
     public virtual async Task<T?> GetAsync(Expression<Func<T, bool>> predicate,
-        string? includeProperties = default,
+        string[]? includeProperties = default,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _dbContext.Set<T>();
@@ -44,7 +44,7 @@ public class BaseRepository<T>(ApplicationDbContext dbContext)
 
         if (includeProperties != null)
         {
-            foreach (var property in includeProperties.Split([','], StringSplitOptions.RemoveEmptyEntries))
+            foreach (var property in includeProperties)
                 query = query.Include(property);
         }
         return await query.FirstOrDefaultAsync(cancellationToken);

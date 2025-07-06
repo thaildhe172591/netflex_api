@@ -85,7 +85,7 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
 
         var user = await _unitOfWork.Repository<User>()
             .GetAsync(x => x.Id == userSession.UserId,
-                includeProperties: string.Join(",", [nameof(User.Roles), nameof(User.Permissions)]),
+                includeProperties: [nameof(User.Roles), nameof(User.Permissions)],
                 cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 

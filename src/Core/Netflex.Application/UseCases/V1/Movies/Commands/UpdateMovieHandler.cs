@@ -39,7 +39,7 @@ public class UpdateMovieHandler(IUnitOfWork unitOfWork, ICloudStorage cloudStora
     {
         var movieRepository = _unitOfWork.Repository<Movie>();
         var movie = await movieRepository.GetAsync(m => m.Id == request.Id,
-            includeProperties: string.Join(",", [nameof(Movie.Actors), nameof(Movie.Keywords), nameof(Movie.Genres)]),
+            includeProperties: [nameof(Movie.Actors), nameof(Movie.Keywords), nameof(Movie.Genres)],
             cancellationToken: cancellationToken)
                 ?? throw new NotFoundException(nameof(Movie), request.Id);
 
