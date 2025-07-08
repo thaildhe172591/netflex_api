@@ -1,13 +1,13 @@
 namespace Netflex.Application.DTOs;
 
 public record SerieDto
-(
-    long Id,
-    string Name,
-    string? Overview,
-    string? PosterPath,
-    string? BackdropPath,
-    string? CountryIso,
-    DateOnly? FirstAirDate,
-    DateOnly? LastAirDate
-);
+{
+    public long Id { get; init; }
+    public string? Name { get; init; }
+    public string? Overview { get; init; }
+    public string? PosterPath { get; init; }
+    public string? BackdropPath { get; init; }
+    public string? CountryIso { get; init; }
+    public DateOnly? FirstAirDate { get; init; }
+    public DateOnly? LastAirDate { get; init; }
+}

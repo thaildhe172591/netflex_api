@@ -1,3 +1,7 @@
 namespace Netflex.Application.DTOs;
 
-public record GenreDto(long Id, string Name);
+public class GenreDto
+{
+    public long Id { get; init; }
+    public string? Name { get; init; }
+}
