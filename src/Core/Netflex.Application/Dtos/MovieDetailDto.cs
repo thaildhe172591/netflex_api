@@ -11,6 +11,8 @@ public record MovieDetailDto
     public string? CountryIso { get; init; }
     public int? Runtime { get; init; }
     public DateOnly? ReleaseDate { get; init; }
+    public decimal? AverageRating { get; init; }
+    public int TotalReviews { get; init; }
     public ICollection<ActorDto>? Actors { get; init; }
     public ICollection<KeywordDto>? Keywords { get; init; }
     public ICollection<KeywordDto>? Genres { get; init; }

@@ -27,7 +27,7 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
                 backdrop_path AS backdroppath, 
                 video_url AS videourl, 
                 country_iso AS countryiso, 
-                run_time AS runtime, 
+                runtime, 
                 release_date AS releasedate 
             FROM dbo.movies
             WHERE movie_id = @Id;
@@ -56,6 +56,13 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             FROM dbo.genres g
             INNER JOIN dbo.movie_genres mg ON mg.genre_id = g.genre_id
             WHERE mg.movie_id = @Id;
+
+            -- Rating
+            SELECT 
+                ROUND(AVG(rating::numeric), 1) AS averagerating,
+                COUNT(*) AS totalreview
+            FROM dbo.reviews
+            WHERE target_id = @Id AND target_type = 'movie';
         ";
 
         using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
@@ -66,12 +73,15 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
         var actors = (await multi.ReadAsync<ActorDto>()).ToList();
         var keywords = (await multi.ReadAsync<KeywordDto>()).ToList();
         var genres = (await multi.ReadAsync<KeywordDto>()).ToList();
+        var (avgRating, totalReviews) = await multi.ReadSingleOrDefaultAsync<(decimal?, int)>();
 
         return movie with
         {
             Actors = actors,
             Keywords = keywords,
-            Genres = genres
+            Genres = genres,
+            AverageRating = avgRating,
+            TotalReviews = totalReviews
         };
     }
 
@@ -82,15 +92,15 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
     {
         var query = new StringBuilder(@"
             SELECT  
-                movie_id AS id, 
-                title, 
-                overview, 
-                poster_path AS posterpath, 
-                backdrop_path AS backdroppath, 
-                video_url AS videourl, 
-                country_iso AS countryiso, 
-                run_time AS runtime, 
-                release_date AS releasedate 
+                m.movie_id AS id, 
+                m.title, 
+                m.overview, 
+                m.poster_path AS posterpath, 
+                m.backdrop_path AS backdroppath, 
+                m.video_url AS videourl, 
+                m.country_iso AS countryiso, 
+                m.runtime, 
+                m.release_date AS releasedate 
             FROM dbo.movies m
             WHERE 1 = 1
         ");
