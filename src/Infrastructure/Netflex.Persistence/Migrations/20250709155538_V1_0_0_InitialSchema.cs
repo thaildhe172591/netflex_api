@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Netflex.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class V1_InitialSchema : Migration
+    public partial class V1_0_0_InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,7 +75,7 @@ namespace Netflex.Persistence.Migrations
                     video_url = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     country_iso = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
                     runtime = table.Column<int>(type: "integer", nullable: true),
-                    release_date = table.Column<DateOnly>(type: "date", nullable: true)
+                    release_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -156,8 +156,8 @@ namespace Netflex.Persistence.Migrations
                     poster_path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     backdrop_path = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     country_iso = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: true),
-                    first_air_date = table.Column<DateOnly>(type: "date", nullable: true),
-                    last_air_date = table.Column<DateOnly>(type: "date", nullable: true)
+                    first_air_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    last_air_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -300,7 +300,7 @@ namespace Netflex.Persistence.Migrations
                     overview = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
                     video_url = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     runtime = table.Column<int>(type: "integer", nullable: true),
-                    air_date = table.Column<DateOnly>(type: "date", nullable: true),
+                    air_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     series_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

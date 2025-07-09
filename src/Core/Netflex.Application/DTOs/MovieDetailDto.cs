@@ -10,7 +10,7 @@ public record MovieDetailDto
     public string? VideoUrl { get; init; }
     public string? CountryIso { get; init; }
     public int? Runtime { get; init; }
-    public DateOnly? ReleaseDate { get; init; }
+    public DateTime? ReleaseDate { get; init; }
     public decimal? AverageRating { get; init; }
     public int TotalReviews { get; init; }
     public ICollection<ActorDto>? Actors { get; init; }

@@ -9,19 +9,19 @@ public class Movie : Aggregate<long>
     public string? VideoUrl { get; set; }
     public string? CountryIso { get; set; }
     public int? Runtime { get; set; }
-    public DateOnly? ReleaseDate { get; set; }
+    public DateTime? ReleaseDate { get; set; }
     public virtual ICollection<Actor> Actors { get; set; } = [];
     public virtual ICollection<Keyword> Keywords { get; set; } = [];
     public virtual ICollection<Genre> Genres { get; set; } = [];
     public static Movie Create(string title, string? overview = default, string? posterPath = default,
-        string? backdropPath = default, int? runtime = default, DateOnly? releaseDate = default,
+        string? backdropPath = default, int? runtime = default, DateTime? releaseDate = default,
             string? countryIso = default, string? videoUrl = default)
     {
         var movie = new Movie()
         {
             Title = title,
             Runtime = runtime,
-            ReleaseDate = releaseDate,
+            ReleaseDate = releaseDate?.ToUniversalTime(),
             Overview = overview,
             PosterPath = posterPath,
             BackdropPath = backdropPath,
@@ -33,7 +33,7 @@ public class Movie : Aggregate<long>
     }
 
     public void Update(string? title, string? overview, string? posterPath, string? backdropPath,
-        int? runtime, DateOnly? releaseDate, string? countryIso, string? videoUrl)
+        int? runtime, DateTime? releaseDate, string? countryIso, string? videoUrl)
     {
         Title = title ?? Title;
         Overview = overview ?? Overview;
@@ -42,7 +42,7 @@ public class Movie : Aggregate<long>
         VideoUrl = videoUrl ?? VideoUrl;
         CountryIso = countryIso ?? CountryIso;
         Runtime = runtime ?? Runtime;
-        ReleaseDate = releaseDate ?? ReleaseDate;
+        ReleaseDate = releaseDate?.ToUniversalTime() ?? ReleaseDate;
     }
 
     public void AssignActors(IEnumerable<Actor> actors)

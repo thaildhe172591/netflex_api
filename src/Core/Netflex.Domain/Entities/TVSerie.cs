@@ -7,13 +7,13 @@ public class TVSerie : Aggregate<long>
     public string? PosterPath { get; set; }
     public string? BackdropPath { get; set; }
     public string? CountryIso { get; set; }
-    public DateOnly? FirstAirDate { get; set; }
-    public DateOnly? LastAirDate { get; set; }
+    public DateTime? FirstAirDate { get; set; }
+    public DateTime? LastAirDate { get; set; }
     public virtual ICollection<Keyword> Keywords { get; set; } = [];
     public virtual ICollection<Genre> Genres { get; set; } = [];
     public static TVSerie Create(string name, string? overview = default, string? posterPath = default,
-        string? backdropPath = default, DateOnly? firstAirDate = default,
-        DateOnly? lastAirDate = default, string? countryIso = default)
+        string? backdropPath = default, DateTime? firstAirDate = default,
+        DateTime? lastAirDate = default, string? countryIso = default)
     {
         var tvSerie = new TVSerie()
         {
@@ -22,8 +22,8 @@ public class TVSerie : Aggregate<long>
             PosterPath = posterPath,
             BackdropPath = backdropPath,
             CountryIso = countryIso,
-            FirstAirDate = firstAirDate,
-            LastAirDate = lastAirDate
+            FirstAirDate = firstAirDate?.ToUniversalTime(),
+            LastAirDate = lastAirDate?.ToUniversalTime()
         };
         tvSerie.AddDomainEvent(new TVSerieCreatedEvent(tvSerie));
         return tvSerie;
@@ -50,14 +50,14 @@ public class TVSerie : Aggregate<long>
     }
 
     public void Update(string? name, string? overview, string? posterPath,
-        string? backdropPath, DateOnly? firstAirDate, DateOnly? lastAirDate, string? countryIso)
+        string? backdropPath, DateTime? firstAirDate, DateTime? lastAirDate, string? countryIso)
     {
         Name = name ?? Name;
         Overview = overview ?? Overview;
         PosterPath = posterPath ?? PosterPath;
         BackdropPath = backdropPath ?? BackdropPath;
         CountryIso = countryIso ?? CountryIso;
-        FirstAirDate = firstAirDate ?? FirstAirDate;
-        LastAirDate = lastAirDate ?? LastAirDate;
+        FirstAirDate = firstAirDate?.ToUniversalTime() ?? FirstAirDate;
+        LastAirDate = lastAirDate?.ToUniversalTime() ?? LastAirDate;
     }
 }

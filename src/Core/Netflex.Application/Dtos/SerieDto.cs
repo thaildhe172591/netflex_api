@@ -8,6 +8,6 @@ public record SerieDto
     public string? PosterPath { get; init; }
     public string? BackdropPath { get; init; }
     public string? CountryIso { get; init; }
-    public DateOnly? FirstAirDate { get; init; }
-    public DateOnly? LastAirDate { get; init; }
+    public DateTime? FirstAirDate { get; init; }
+    public DateTime? LastAirDate { get; init; }
 }

@@ -11,7 +11,7 @@ public record CreateEpisodeRequest
     public string? Overview { get; init; }
     public IFormFile? Video { get; init; }
     public int? Runtime { get; init; }
-    public DateOnly? AirDate { get; init; }
+    public DateTime? AirDate { get; init; }
     public ICollection<long>? Actors { get; init; }
 }
 public record CreateEpisodeResponse(long Id);

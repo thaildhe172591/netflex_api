@@ -13,7 +13,7 @@ public record UpdateMovieCommand(
     IFileResource? Video,
     string? CountryIso,
     int? Runtime,
-    DateOnly? ReleaseDate,
+    DateTime? ReleaseDate,
     ICollection<long>? Actors,
     ICollection<long>? Keywords,
     ICollection<long>? Genres

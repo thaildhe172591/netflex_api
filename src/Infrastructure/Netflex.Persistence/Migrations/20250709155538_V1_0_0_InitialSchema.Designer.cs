@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Netflex.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250706181035_V1_InitialSchema")]
-    partial class V1_InitialSchema
+    [Migration("20250709155538_V1_0_0_InitialSchema")]
+    partial class V1_0_0_InitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,8 +74,8 @@ namespace Netflex.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateOnly?>("AirDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("AirDate")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("air_date");
 
                     b.Property<int>("EpisodeNumber")
@@ -217,8 +217,8 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("poster_path");
 
-                    b.Property<DateOnly?>("ReleaseDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("release_date");
 
                     b.Property<int?>("Runtime")
@@ -422,12 +422,12 @@ namespace Netflex.Persistence.Migrations
                         .HasColumnType("character varying(3)")
                         .HasColumnName("country_iso");
 
-                    b.Property<DateOnly?>("FirstAirDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("FirstAirDate")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("first_air_date");
 
-                    b.Property<DateOnly?>("LastAirDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("LastAirDate")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_air_date");
 
                     b.Property<string>("Name")

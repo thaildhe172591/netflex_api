@@ -8,7 +8,7 @@ public record EpisodeDto
     public string? Overview { get; init; }
     public string? VideoUrl { get; init; }
     public int? Runtime { get; init; }
-    public DateOnly? AirDate { get; init; }
+    public DateTime? AirDate { get; init; }
     public long SeriesId { get; init; }
     public string? SeriesName { get; init; }
     public string? PosterPath { get; init; }

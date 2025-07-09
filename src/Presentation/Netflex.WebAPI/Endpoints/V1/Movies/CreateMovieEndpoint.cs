@@ -12,7 +12,7 @@ public record CreateMovieRequest
     public IFormFile? Video { get; init; }
     public string? CountryIso { get; init; }
     public int? Runtime { get; init; }
-    public DateOnly? ReleaseDate { get; init; }
+    public DateTime? ReleaseDate { get; init; }
     public ICollection<long>? Actors { get; init; }
     public ICollection<long>? Keywords { get; init; }
     public ICollection<long>? Genres { get; init; }

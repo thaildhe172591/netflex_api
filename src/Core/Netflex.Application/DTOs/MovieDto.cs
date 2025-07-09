@@ -10,5 +10,5 @@ public class MovieDto
     public string? VideoUrl { get; init; }
     public string? CountryIso { get; init; }
     public int? Runtime { get; init; }
-    public DateOnly? ReleaseDate { get; init; }
+    public DateTime? ReleaseDate { get; init; }
 }

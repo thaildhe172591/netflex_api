@@ -13,7 +13,7 @@ public record UpdateEpisodeCommand(
     string? Overview,
     IFileResource? Video,
     int? Runtime,
-    DateOnly? AirDate,
+    DateTime? AirDate,
     ICollection<long>? Actors
 ) : IRequest<UpdateEpisodeResult>;
 

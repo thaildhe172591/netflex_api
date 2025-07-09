@@ -9,8 +9,8 @@ public record CreateSerieCommand(
     IFileResource? Poster,
     IFileResource? Backdrop,
     string? CountryIso,
-    DateOnly? FirstAirDate,
-    DateOnly? LastAirDate,
+    DateTime? FirstAirDate,
+    DateTime? LastAirDate,
     ICollection<long>? Keywords,
     ICollection<long>? Genres
 ) : ICommand<CreateSerieResult>;
