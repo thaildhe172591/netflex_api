@@ -62,7 +62,7 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
                 ROUND(AVG(rating::numeric), 1) AS averagerating,
                 COUNT(*) AS totalreview
             FROM dbo.reviews
-            WHERE target_id = @Id AND target_type = 'movie';
+            WHERE target_id = CAST(@Id AS text) AND target_type = 'movie';
         ";
 
         using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
