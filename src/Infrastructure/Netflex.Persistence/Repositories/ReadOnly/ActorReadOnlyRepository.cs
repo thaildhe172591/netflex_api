@@ -29,4 +29,20 @@ public class ActorReadOnlyRepository : ReadOnlyRepository, IActorReadOnlyReposit
         parameters.Add("Search", $"%{search}%");
         return GetPagedDataAsync<ActorDto>(query, sortBy, pageIndex, pageSize, parameters);
     }
+    public async Task<ActorDto?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var query = @"
+            SELECT
+                actor_id as id,
+                name, image, gender,
+                birth_date as birthdate,
+                biography
+            FROM dbo.actors a
+            WHERE a.actor_id = @Id
+        ";
+
+        var parameters = new DynamicParameters();
+        parameters.Add("Id", id);
+        return await _connection.QuerySingleOrDefaultAsync<ActorDto>(query, parameters);
+    }
 }
