@@ -87,8 +87,8 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
 
 
     public Task<PaginatedResult<MovieDto>> GetMoviesAsync(string? search,
-        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, IEnumerable<long>? actorIds, string? sortBy,
-        int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, IEnumerable<long>? actorIds,
+        int? year, string? sortBy, int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
             SELECT  
@@ -145,6 +145,12 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
                 )
             ");
             parameters.Add("KeywordIds", keywordIds);
+        }
+
+        if (year.HasValue)
+        {
+            query.AppendLine("AND EXTRACT(YEAR FROM m.release_date) = @Year");
+            parameters.Add("Year", year.Value);
         }
 
         return GetPagedDataAsync<MovieDto>(query.ToString(), sortBy, pageIndex, pageSize, parameters);

@@ -65,7 +65,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
 
 
     public Task<PaginatedResult<SerieDto>> GetSeriesAsync(string? search,
-        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, string? sortBy,
+        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, int? year, string? sortBy,
         int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
@@ -111,6 +111,12 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
                 )
             ");
             parameters.Add("KeywordIds", keywordIds);
+        }
+
+        if (year.HasValue)
+        {
+            query.AppendLine("AND EXTRACT(YEAR FROM s.first_air_date) = @Year");
+            parameters.Add("Year", year.Value);
         }
 
         return GetPagedDataAsync<SerieDto>(

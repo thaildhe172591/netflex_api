@@ -7,6 +7,7 @@ public record GetSeriesRequest(
     string? Search,
     string? Genres,
     string? Keywords,
+    int? Year,
     string? SortBy,
     int PageIndex = 0,
     int PageSize = 10
@@ -27,7 +28,9 @@ public class GetSeriesEndpoint : ICarterModule
 
                 KeywordIds = request.Keywords?.Split(',')
                   .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                  .Where(id => id != 0).ToArray() ?? []
+                  .Where(id => id != 0).ToArray() ?? [],
+
+                Year = request.Year
             };
             var result = await sender.Send(query);
             return Results.Ok(result);

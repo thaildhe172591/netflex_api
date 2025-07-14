@@ -8,6 +8,7 @@ public record GetMoviesQuery(
     long[]? KeywordIds,
     long[]? GenreIds,
     long[]? ActorIds,
+    int? Year,
     string? SortBy,
     int PageIndex,
     int PageSize
@@ -24,6 +25,7 @@ public class GetMoviesHandler(IMovieReadOnlyRepository movieReadOnlyRepository)
             request.KeywordIds,
             request.GenreIds,
             request.ActorIds,
+            request.Year,
             request.SortBy,
             request.PageIndex,
             request.PageSize,

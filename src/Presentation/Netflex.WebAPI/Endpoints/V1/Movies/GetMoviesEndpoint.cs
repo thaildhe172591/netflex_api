@@ -8,6 +8,7 @@ public record GetMoviesRequest(
     string? Genres,
     string? Keywords,
     string? Actors,
+    int? Year,
     string? SortBy,
     int PageIndex = 1,
     int PageSize = 10
@@ -32,8 +33,9 @@ public class GetMoviesEndpoint : ICarterModule
 
                 ActorIds = request.Actors?.Split(',')
                  .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                 .Where(id => id != 0).ToArray() ?? []
+                 .Where(id => id != 0).ToArray() ?? [],
 
+                Year = request.Year
             };
             var result = await sender.Send(query);
             return Results.Ok(result);

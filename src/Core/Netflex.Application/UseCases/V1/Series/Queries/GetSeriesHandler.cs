@@ -7,6 +7,7 @@ public record GetSeriesQuery(
     string? Search,
     long[]? KeywordIds,
     long[]? GenreIds,
+    int? Year,
     string? SortBy,
     int PageIndex,
     int PageSize
@@ -22,6 +23,7 @@ public class GetSeriesHandler(ISerieReadOnlyRepository serieReadOnlyRepository)
             request.Search,
             request.KeywordIds,
             request.GenreIds,
+            request.Year,
             request.SortBy,
             request.PageIndex,
             request.PageSize,
