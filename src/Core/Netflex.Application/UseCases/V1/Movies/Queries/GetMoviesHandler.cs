@@ -8,8 +8,10 @@ public record GetMoviesQuery(
     long[]? KeywordIds,
     long[]? GenreIds,
     long[]? ActorIds,
+    string? Country,
     int? Year,
     string? SortBy,
+    string? FollowerId,
     int PageIndex,
     int PageSize
 ) : IQuery<PaginatedResult<MovieDto>>;
@@ -25,8 +27,10 @@ public class GetMoviesHandler(IMovieReadOnlyRepository movieReadOnlyRepository)
             request.KeywordIds,
             request.GenreIds,
             request.ActorIds,
+            request.Country,
             request.Year,
             request.SortBy,
+            request.FollowerId,
             request.PageIndex,
             request.PageSize,
             cancellationToken

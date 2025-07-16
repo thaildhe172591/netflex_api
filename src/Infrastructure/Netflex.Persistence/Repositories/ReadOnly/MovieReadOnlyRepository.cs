@@ -88,7 +88,8 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
 
     public Task<PaginatedResult<MovieDto>> GetMoviesAsync(string? search,
         IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, IEnumerable<long>? actorIds,
-        int? year, string? sortBy, int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+        string? country, int? year, string? sortBy, string? followerId, int pageIndex, int pageSize,
+        CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
             SELECT  
@@ -147,10 +148,29 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             parameters.Add("KeywordIds", keywordIds);
         }
 
+        if (!string.IsNullOrWhiteSpace(country))
+        {
+            query.AppendLine("AND m.country_iso = @Country");
+            parameters.Add("Country", country);
+        }
+
         if (year.HasValue)
         {
             query.AppendLine("AND EXTRACT(YEAR FROM m.release_date) = @Year");
             parameters.Add("Year", year.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(followerId))
+        {
+            query.AppendLine(@"
+                AND EXISTS (
+                    SELECT 1 FROM dbo.follows f
+                    WHERE f.target_id = CAST(m.movie_id AS text)
+                    AND f.target_type = 'movie'
+                    AND f.user_id = @FollowerId
+                )
+            ");
+            parameters.Add("FollowerId", followerId);
         }
 
         return GetPagedDataAsync<MovieDto>(query.ToString(), sortBy, pageIndex, pageSize, parameters);

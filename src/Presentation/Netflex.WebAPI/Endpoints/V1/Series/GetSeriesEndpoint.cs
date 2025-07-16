@@ -7,8 +7,10 @@ public record GetSeriesRequest(
     string? Search,
     string? Genres,
     string? Keywords,
+    string? Country,
     int? Year,
     string? SortBy,
+    string? FollowerId,
     int PageIndex = 0,
     int PageSize = 10
 ) : PaginationRequest(PageIndex, PageSize);
@@ -28,9 +30,7 @@ public class GetSeriesEndpoint : ICarterModule
 
                 KeywordIds = request.Keywords?.Split(',')
                   .Select(x => long.TryParse(x.Trim(), out var id) ? id : 0)
-                  .Where(id => id != 0).ToArray() ?? [],
-
-                Year = request.Year
+                  .Where(id => id != 0).ToArray() ?? []
             };
             var result = await sender.Send(query);
             return Results.Ok(result);

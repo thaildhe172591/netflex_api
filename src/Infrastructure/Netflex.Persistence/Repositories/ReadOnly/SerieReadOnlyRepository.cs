@@ -65,8 +65,8 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
 
 
     public Task<PaginatedResult<SerieDto>> GetSeriesAsync(string? search,
-        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, int? year, string? sortBy,
-        int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+        IEnumerable<long>? keywordIds, IEnumerable<long>? genreIds, string? country, int? year, string? sortBy,
+        string? followerId, int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
             SELECT  
@@ -112,11 +112,30 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             ");
             parameters.Add("KeywordIds", keywordIds);
         }
-
+ 
+        if (!string.IsNullOrWhiteSpace(country))
+        {
+            query.AppendLine("AND s.country_iso = @Country");
+            parameters.Add("Country", country);
+        }
+ 
         if (year.HasValue)
         {
             query.AppendLine("AND EXTRACT(YEAR FROM s.first_air_date) = @Year");
             parameters.Add("Year", year.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(followerId))
+        {
+            query.AppendLine(@"
+                AND EXISTS (
+                    SELECT 1 FROM dbo.follows f
+                    WHERE f.target_id = CAST(s.tv_serie_id AS text)
+                    AND f.target_type = 'tv_serie'
+                    AND f.user_id = @FollowerId
+                )
+            ");
+            parameters.Add("FollowerId", followerId);
         }
 
         return GetPagedDataAsync<SerieDto>(

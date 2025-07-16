@@ -7,8 +7,10 @@ public record GetSeriesQuery(
     string? Search,
     long[]? KeywordIds,
     long[]? GenreIds,
+    string? Country,
     int? Year,
     string? SortBy,
+    string? FollowerId,
     int PageIndex,
     int PageSize
 ) : IQuery<PaginatedResult<SerieDto>>;
@@ -23,8 +25,10 @@ public class GetSeriesHandler(ISerieReadOnlyRepository serieReadOnlyRepository)
             request.Search,
             request.KeywordIds,
             request.GenreIds,
+            request.Country,
             request.Year,
             request.SortBy,
+            request.FollowerId,
             request.PageIndex,
             request.PageSize,
             cancellationToken
