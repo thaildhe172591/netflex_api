@@ -45,7 +45,9 @@ public static class DependencyInjection
             .AddTransient<IMovieReadOnlyRepository, MovieReadOnlyRepository>()
             .AddTransient<ISerieReadOnlyRepository, SerieReadOnlyRepository>()
             .AddTransient<IActorReadOnlyRepository, ActorReadOnlyRepository>()
-            .AddTransient<IEpisodeReadOnlyRepository, EpisodeReadOnlyRepository>();
+            .AddTransient<IEpisodeReadOnlyRepository, EpisodeReadOnlyRepository>()
+            .AddTransient<INotificationReadOnlyRepository, NotificationReadOnlyRepository>()
+            .AddTransient<IReportReadOnlyRepository, ReportReadOnlyRepository>();
 
         services.Decorate<IUserRepository, CachedUserRepository>();
 
