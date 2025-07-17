@@ -8,10 +8,17 @@ public class Report : AuditableEntity<long>
     public required string Reason { get; set; }
     public string? Description { get; set; }
     public Process Process { get; set; } = Process.Open;
-    public static Report Create(string reason, string description, Process process) => new()
+    public static Report Create(string reason, string? description, Process process) => new()
     {
         Reason = reason,
         Description = description,
         Process = process
     };
+
+    public Report Update(string? reason, string? description)
+    {
+        Reason = reason ?? Reason;
+        Description = description ?? Description;
+        return this;
+    }
 }

@@ -24,4 +24,10 @@ public class Review : IEntity
         };
     }
 
+    public void Update(Rating? rating, string? comment = default, int? likeCount = default)
+    {
+        Rating = rating ?? Rating;
+        Comment = comment ?? Comment;
+        LikeCount = likeCount ?? LikeCount;
+    }
 }

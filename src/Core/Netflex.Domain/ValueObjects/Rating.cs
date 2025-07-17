@@ -10,7 +10,7 @@ public record Rating
 
     public static Rating Of(int value)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 10, nameof(Rating));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(value, 5, nameof(Rating));
         ArgumentOutOfRangeException.ThrowIfLessThan(value, 0, nameof(Rating));
         return new Rating(value);
     }

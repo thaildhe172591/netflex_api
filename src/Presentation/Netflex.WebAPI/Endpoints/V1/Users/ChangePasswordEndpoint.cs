@@ -11,7 +11,7 @@ public class ChangePasswordEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/change-password", async (ChangePasswordRequest request, ISender sender, HttpContext context) =>
+        app.MapPost("/users/change-password", async (ChangePasswordRequest request, ISender sender, HttpContext context) =>
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new UserNotFoundException();
