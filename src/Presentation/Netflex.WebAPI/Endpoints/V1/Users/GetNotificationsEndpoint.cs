@@ -8,7 +8,7 @@ namespace Netflex.WebAPI.Endpoints.V1.Users;
 public record GetNotificationsRequest(string? Search, string? SortBy, int PageIndex = 1, int PageSize = 10)
     : PaginationRequest(PageIndex, PageSize);
 
-public class GetNotificationsEndpoint : ICarterModule
+public class GetMyNotificationsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -22,6 +22,6 @@ public class GetNotificationsEndpoint : ICarterModule
         })
         .RequireAuthorization()
         .MapToApiVersion(1)
-        .WithName(nameof(GetNotificationsEndpoint));
+        .WithName(nameof(GetMyNotificationsEndpoint));
     }
 }
