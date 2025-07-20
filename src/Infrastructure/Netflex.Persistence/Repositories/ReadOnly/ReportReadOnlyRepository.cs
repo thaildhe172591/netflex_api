@@ -18,7 +18,7 @@ public class ReportReadOnlyRepository : ReadOnlyRepository, IReportReadOnlyRepos
         int pageIndex, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = new StringBuilder(@"
-            SELECT  report_id as id, reason, description, process
+            SELECT  report_id as id, reason, description, process, created_by as createdby, created_at as createdat
             FROM dbo.reports
             WHERE 1 = 1
         ");
