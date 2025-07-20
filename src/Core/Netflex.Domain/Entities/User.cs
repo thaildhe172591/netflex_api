@@ -30,6 +30,15 @@ public class User : Aggregate<string>
         AddDomainEvent(new PasswordChangedEvent(this, sessionId));
     }
 
-    public void AssignRole(Role role) => Roles.Add(role);
+    public void AssignRole(List<Role> roles)
+    {
+        if (roles == null || roles.Count == 0) return;
+        Roles.Clear();
+        foreach (var role in roles)
+        {
+            if (role == null) continue;
+            Roles.Add(role);
+        }
+    }
 
 }
