@@ -1,6 +1,6 @@
 namespace Netflex.Domain.Entities.Abstractions;
 
-public abstract class AuditableEntity<T> : Entity<T>, IAuditable
+public abstract class AuditableEntity<T> : Aggregate<T>, IAuditable
 {
     public DateTime? CreatedAt { get; set; }
     public DateTime? LastModified { get; set; }

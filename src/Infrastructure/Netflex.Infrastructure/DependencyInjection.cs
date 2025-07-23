@@ -1,9 +1,11 @@
+using System.Reflection;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Netflex.Application.Common.Exceptions;
 using Netflex.Application.Interfaces;
+using Netflex.Shared.MassTransit;
 
 namespace Netflex.Infrastructure;
 
@@ -12,6 +14,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices
         (this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
         var cacheConnection = configuration.GetConnectionString("Cache")
             ?? throw new NotConfiguredException("Cache");
 

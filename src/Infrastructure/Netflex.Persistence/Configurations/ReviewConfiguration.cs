@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Netflex.Application.DTOs;
 using Netflex.Domain.ValueObjects;
 
 namespace Netflex.Persistence.Configurations;

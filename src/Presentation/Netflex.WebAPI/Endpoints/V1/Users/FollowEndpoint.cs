@@ -10,7 +10,7 @@ public class FollowEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/users/follow", async (ChangePasswordRequest request, ISender sender, HttpContext context) =>
+        app.MapPost("/users/follow", async (FollowRequest request, ISender sender, HttpContext context) =>
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new UserNotFoundException();

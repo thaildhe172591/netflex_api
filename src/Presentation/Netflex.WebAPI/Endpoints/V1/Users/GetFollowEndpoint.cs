@@ -1,25 +1,23 @@
 using System.Security.Claims;
 using Netflex.Application.Common.Exceptions;
 using Netflex.Application.UseCases.V1.Users.Commands;
-
 namespace Netflex.WebAPI.Endpoints.V1.Users;
 
-public record UnfollowRequest(string TargetId, string TargetType);
+public record GetFollowRequest(string TargetId, string TargetType);
 
-public class UnfollowEndpoint : ICarterModule
+public class GetFollowEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/users/unfollow", async (UnfollowRequest request, ISender sender, HttpContext context) =>
+        app.MapGet("/users/follow", async ([AsParameters] GetFollowRequest request, ISender sender, HttpContext context) =>
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new UserNotFoundException();
-
-            await sender.Send(request.Adapt<UnfollowCommand>() with { UserId = userId });
-            return Results.Ok();
+            var query = request.Adapt<GetFollowQuery>() with { UserId = userId };
+            return Results.Ok(await sender.Send(query));
         })
         .RequireAuthorization()
         .MapToApiVersion(1)
-        .WithName(nameof(UnfollowEndpoint));
+        .WithName(nameof(GetFollowEndpoint));
     }
 }

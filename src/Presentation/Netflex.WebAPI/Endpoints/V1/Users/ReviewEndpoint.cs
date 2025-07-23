@@ -5,7 +5,7 @@ using Netflex.Application.UseCases.V1.Reviews.Commands;
 
 namespace Netflex.WebAPI.Endpoints.V1.Users;
 
-public record CreateOrUpdateReviewRequest(string UserId, string TargetId, string TargetType, int Rating);
+public record CreateOrUpdateReviewRequest(string TargetId, string TargetType, int Rating);
 
 public class ReviewEndpoint : ICarterModule
 {
