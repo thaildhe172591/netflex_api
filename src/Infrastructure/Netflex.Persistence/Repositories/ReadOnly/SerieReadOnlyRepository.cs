@@ -46,6 +46,13 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             FROM dbo.genres g
             INNER JOIN dbo.tv_serie_genres sg ON sg.genre_id = g.genre_id
             WHERE sg.tv_serie_id = @Id;
+
+            -- Rating
+            SELECT 
+                ROUND(AVG(rating::numeric), 1) AS averagerating,
+                COUNT(*) AS totalreview
+            FROM dbo.reviews
+            WHERE target_id = CAST(@Id AS text) AND target_type = 'serie';
         ";
 
         using var multi = await _connection.QueryMultipleAsync(sql, new { Id = id });
@@ -55,11 +62,14 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
 
         var keywords = (await multi.ReadAsync<KeywordDto>()).ToList();
         var genres = (await multi.ReadAsync<GenreDto>()).ToList();
+        var (avgRating, totalReviews) = await multi.ReadSingleOrDefaultAsync<(decimal?, int)>();
 
         return serie with
         {
             Keywords = keywords,
-            Genres = genres
+            Genres = genres,
+            AverageRating = avgRating,
+            TotalReviews = totalReviews
         };
     }
 
@@ -112,13 +122,13 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             ");
             parameters.Add("KeywordIds", keywordIds);
         }
- 
+
         if (!string.IsNullOrWhiteSpace(country))
         {
             query.AppendLine("AND s.country_iso = @Country");
             parameters.Add("Country", country);
         }
- 
+
         if (year.HasValue)
         {
             query.AppendLine("AND EXTRACT(YEAR FROM s.first_air_date) = @Year");
