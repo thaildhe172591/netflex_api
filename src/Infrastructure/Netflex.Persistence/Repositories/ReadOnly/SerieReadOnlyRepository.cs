@@ -12,7 +12,7 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
     public SerieReadOnlyRepository(IDbConnection connection) : base(connection)
     {
         _columns = ["tv_serie_id", "name","overview", "poster_path",
-            "backdrop_path", "country_iso", "first_air_date", "last_air_date"];
+            "backdrop_path", "country_iso", "first_air_date", "last_air_date", "averagerating", "totalreviews"];
     }
 
     public async Task<SerieDetailDto?> GetSerieAsync(long id, CancellationToken cancellationToken)
@@ -80,15 +80,18 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
     {
         var query = new StringBuilder(@"
             SELECT  
-                tv_serie_id AS id, 
-                name, 
-                overview, 
-                poster_path AS posterpath, 
-                backdrop_path AS backdroppath, 
-                country_iso AS countryiso, 
-                first_air_date AS firstairdate, 
-                last_air_date AS lastairdate
+                s.tv_serie_id AS id, 
+                s.name, 
+                s.overview, 
+                s.poster_path AS posterpath, 
+                s.backdrop_path AS backdroppath, 
+                s.country_iso AS countryiso, 
+                s.first_air_date AS firstairdate, 
+                s.last_air_date AS lastairdate,
+                COALESCE(ROUND(AVG(r.rating::numeric), 1), 0) AS averagerating,
+                COUNT(r.rating) AS totalreviews
             FROM dbo.tv_series s
+            LEFT JOIN dbo.reviews r ON r.target_id = CAST(s.tv_serie_id AS text) AND r.target_type = 'serie'
             WHERE 1 = 1
         ");
         var parameters = new DynamicParameters();
@@ -147,6 +150,12 @@ public class SerieReadOnlyRepository : ReadOnlyRepository, ISerieReadOnlyReposit
             ");
             parameters.Add("FollowerId", followerId);
         }
+
+        // Add GROUP BY clause for the aggregate function
+        query.AppendLine(@"
+            GROUP BY s.tv_serie_id, s.name, s.overview, s.poster_path, s.backdrop_path, 
+                     s.country_iso, s.first_air_date, s.last_air_date
+        ");
 
         return GetPagedDataAsync<SerieDto>(
             query.ToString(),

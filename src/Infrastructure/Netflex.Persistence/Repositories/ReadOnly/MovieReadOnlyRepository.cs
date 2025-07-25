@@ -12,7 +12,7 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
     public MovieReadOnlyRepository(IDbConnection connection) : base(connection)
     {
         _columns = ["movie_id", "title", "overview", "poster_path", "backdrop_path",
-            "video_url", "country_iso", "run_time", "release_date"];
+            "video_url", "country_iso", "run_time", "release_date", "averagerating", "totalreviews"];
     }
 
     public async Task<MovieDetailDto?> GetMovieAsync(long id, CancellationToken cancellationToken)
@@ -102,8 +102,11 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
                 m.video_url AS videourl, 
                 m.country_iso AS countryiso, 
                 m.runtime, 
-                m.release_date AS releasedate 
+                m.release_date AS releasedate,
+                COALESCE(ROUND(AVG(r.rating::numeric), 1), 0) AS averagerating,
+                COUNT(r.rating) AS totalreviews
             FROM dbo.movies m
+            LEFT JOIN dbo.reviews r ON r.target_id = CAST(m.movie_id AS text) AND r.target_type = 'movie'
             WHERE 1 = 1
         ");
         var parameters = new DynamicParameters();
@@ -173,6 +176,12 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             ");
             parameters.Add("FollowerId", followerId);
         }
+
+        // Add GROUP BY clause for the aggregate function
+        query.AppendLine(@"
+            GROUP BY m.movie_id, m.title, m.overview, m.poster_path, m.backdrop_path, 
+                     m.video_url, m.country_iso, m.runtime, m.release_date
+        ");
 
         return GetPagedDataAsync<MovieDto>(query.ToString(), sortBy, pageIndex, pageSize, parameters);
     }

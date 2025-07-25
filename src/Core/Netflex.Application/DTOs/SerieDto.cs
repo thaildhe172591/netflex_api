@@ -10,4 +10,6 @@ public record SerieDto
     public string? CountryIso { get; init; }
     public DateTime? FirstAirDate { get; init; }
     public DateTime? LastAirDate { get; init; }
+    public decimal? AverageRating { get; init; }
+    public int TotalReviews { get; init; }
 }
