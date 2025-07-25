@@ -4,7 +4,6 @@ using Netflex.Application.UseCases.V1.Users.Commands;
 namespace Netflex.WebAPI.Endpoints.V1.Users;
 
 public record GetFollowRequest(string TargetId, string TargetType);
-
 public class GetFollowEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
@@ -14,7 +13,8 @@ public class GetFollowEndpoint : ICarterModule
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new UserNotFoundException();
             var query = request.Adapt<GetFollowQuery>() with { UserId = userId };
-            return Results.Ok(await sender.Send(query));
+            var result = await sender.Send(query);
+            return Results.Ok(result.Follow);
         })
         .RequireAuthorization()
         .MapToApiVersion(1)

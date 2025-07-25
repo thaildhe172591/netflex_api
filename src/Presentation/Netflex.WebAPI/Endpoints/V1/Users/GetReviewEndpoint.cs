@@ -14,7 +14,8 @@ public class GetReviewEndpoint : ICarterModule
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new UserNotFoundException();
             var query = request.Adapt<GetReviewQuery>() with { UserId = userId };
-            return Results.Ok(await sender.Send(query));
+            var result = await sender.Send(query);
+            return Results.Ok(result.Review);
         })
         .RequireAuthorization()
         .MapToApiVersion(1)
