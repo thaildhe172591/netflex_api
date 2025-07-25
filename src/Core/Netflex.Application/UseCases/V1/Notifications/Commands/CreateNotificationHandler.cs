@@ -15,9 +15,10 @@ public class CreateNotificationCommandValidator : AbstractValidator<CreateNotifi
     }
 }
 
-public class CreateNotificationHandler(IUnitOfWork unitOfWork)
+public class CreateNotificationHandler(IUnitOfWork unitOfWork, INotificationSender notificationSender)
     : ICommandHandler<CreateNotificationCommand, CreateNotificationResult>
 {
+    private readonly INotificationSender _notificationSender = notificationSender;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<CreateNotificationResult> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
@@ -36,6 +37,7 @@ public class CreateNotificationHandler(IUnitOfWork unitOfWork)
         }
 
         await _unitOfWork.CommitAsync();
+        await _notificationSender.SendNotificationAsync(new Message(request.UserId, notification.Content ?? string.Empty));
 
         return new CreateNotificationResult(notification.Id);
     }

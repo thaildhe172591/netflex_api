@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Netflex.Infrastructure.Settings;
 using System.IdentityModel.Tokens.Jwt;
+using Netflex.WebAPI.Hubs;
+using Netflex.Application.Interfaces;
 
 namespace Netflex.WebAPI;
 
@@ -54,6 +56,9 @@ public static class DependencyInjection
                     .AllowCredentials();
             });
         });
+        services.AddSignalR();
+        services.AddSingleton<ConnectionManager>();
+        services.AddScoped<INotificationSender, NotificationSender>();
 
         return services;
     }
@@ -79,6 +84,7 @@ public static class DependencyInjection
             .WithApiVersionSet(versionSet)
             .MapCarter();
 
+        app.MapHub<NotificationHub>("/hub/notification");
         app.UseCors();
 
         return app;
