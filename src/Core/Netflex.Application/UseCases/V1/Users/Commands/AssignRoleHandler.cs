@@ -25,7 +25,8 @@ public class AssignRoleHandler(
         var user = _unitOfWork.Repository<Domain.Entities.User>().Get(request.UserId)
             ?? throw new UserNotFoundException();
 
-        var role = await _unitOfWork.Repository<Domain.Entities.Role>().GetAsync(r => r.Name == request.RoleName, cancellationToken: cancellationToken)
+        var role = await _unitOfWork.Repository<Domain.Entities.Role>()
+            .GetAsync(r => r.Name == request.RoleName, includeProperties: ["Roles"], cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Entities.Role), request.RoleName);
 
         user.AssignRole([role]);

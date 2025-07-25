@@ -33,12 +33,7 @@ public class User : Aggregate<string>
     public void AssignRole(List<Role> roles)
     {
         if (roles == null || roles.Count == 0) return;
-        Roles.Clear();
-        foreach (var role in roles)
-        {
-            if (role == null) continue;
-            Roles.Add(role);
-        }
+        Roles = roles;
     }
 
 }
