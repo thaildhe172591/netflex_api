@@ -36,7 +36,8 @@ public class MovieReadOnlyRepository : ReadOnlyRepository, IMovieReadOnlyReposit
             SELECT 
                 a.actor_id AS id, 
                 a.name, 
-                a.image
+                a.image,
+                a.gender
             FROM dbo.actors a
             INNER JOIN dbo.movie_actors ma ON ma.actor_id = a.actor_id
             WHERE ma.movie_id = @Id;

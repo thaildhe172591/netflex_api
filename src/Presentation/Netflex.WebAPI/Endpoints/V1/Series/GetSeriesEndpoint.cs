@@ -11,7 +11,7 @@ public record GetSeriesRequest(
     int? Year,
     string? SortBy,
     string? FollowerId,
-    int PageIndex = 0,
+    int PageIndex = 1,
     int PageSize = 10
 ) : PaginationRequest(PageIndex, PageSize);
 

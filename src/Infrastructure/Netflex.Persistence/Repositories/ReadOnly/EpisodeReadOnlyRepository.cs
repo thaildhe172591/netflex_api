@@ -38,7 +38,8 @@ public class EpisodeReadOnlyRepository : ReadOnlyRepository, IEpisodeReadOnlyRep
             SELECT 
                 a.actor_id AS id, 
                 a.name, 
-                a.image
+                a.image,
+                a.gender
             FROM dbo.actors a
             INNER JOIN dbo.episode_actors ea ON a.actor_id = ea.actor_id
             WHERE ea.episode_id = @Id
