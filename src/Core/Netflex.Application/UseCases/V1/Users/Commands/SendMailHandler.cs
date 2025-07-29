@@ -4,9 +4,9 @@ namespace Netflex.Application.UseCases.V1.Users.Commands;
 
 public class SendMailCommand : ICommand
 {
-    public string To { get; set; } = default!;
-    public string Subject { get; set; } = default!;
-    public string Body { get; set; } = default!;
+    public required string To { get; init; }
+    public required string Subject { get; init; }
+    public required string Body { get; init; }
 }
 
 public class SendMailHandler(IUnitOfWork unitOfWork, IEmailService emailService)

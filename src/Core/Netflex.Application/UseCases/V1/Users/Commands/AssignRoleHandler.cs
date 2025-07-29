@@ -22,16 +22,20 @@ public class AssignRoleHandler(
 
     public async Task<Unit> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.Repository<Domain.Entities.User>()
+        var userRepository = _unitOfWork.Repository<Domain.Entities.User>();
+        var roleRepository = _unitOfWork.Repository<Domain.Entities.Role>();
+
+        var user = await userRepository
             .GetAsync(u => u.Id == request.UserId, includeProperties: ["Roles"], cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException();
 
-        var role = await _unitOfWork.Repository<Domain.Entities.Role>()
+        var role = await roleRepository
             .GetAsync(r => r.Name == request.RoleName, cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Entities.Role), request.RoleName);
 
-        if (user.Roles.Any(r => r.Name == role.Name))
+        if (!user.Roles.Any(r => r.Name == role.Name))
             user.AssignRole([role]);
+
         await _unitOfWork.CommitAsync();
         return Unit.Value;
     }

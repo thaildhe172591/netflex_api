@@ -28,6 +28,8 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
     private readonly ISocialServiceFactory _socialServiceFactory = socialServiceFactory;
     private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
     private readonly IRefreshOptions _refreshOptions = refreshOptions;
+
+    private const string DEFAULT_ROLE_NAME = "User";
     public async Task<SocialLoginCallbackResult> Handle(SocialLoginCallbackCommand request,
         CancellationToken cancellationToken)
     {
@@ -38,6 +40,7 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
 
         var userRepository = _unitOfWork.Repository<User>();
         var userLoginRepository = _unitOfWork.Repository<UserLogin>();
+        var roleRepository = _unitOfWork.Repository<Role>();
 
         var userLogin = await userLoginRepository.GetAsync(ul =>
                 ul.ProviderKey == info.Id
@@ -52,6 +55,10 @@ public class SocialLoginCallbackHandler(IUnitOfWork unitOfWork, IJwtTokenService
             if (userExists) throw new EmailAlreadyExistsException();
 
             var newUser = User.Create(userId, Email.Of(info.Email));
+
+            var role = await roleRepository.GetAsync(r => r.Name == DEFAULT_ROLE_NAME, cancellationToken: cancellationToken);
+            if (role is not null) newUser.AssignRole([role]);
+
             await userRepository.AddAsync(newUser, cancellationToken);
 
             userLogin = UserLogin.Create(userId, LoginProvider.Of(request.LoginProvider), info.Id);

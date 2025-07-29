@@ -1,5 +1,6 @@
 using Netflex.Domain.ValueObjects;
 using FluentValidation;
+using Netflex.Shared.Exceptions;
 
 namespace Netflex.Application.UseCases.V1.Users.Commands;
 
@@ -24,10 +25,12 @@ public class CreateUserHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateUserCommand, CreateUserResult>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private const string DEFAULT_ROLE_NAME = "User";
     public async Task<CreateUserResult> Handle(CreateUserCommand request,
         CancellationToken cancellationToken)
     {
         var userRepository = _unitOfWork.Repository<Domain.Entities.User>();
+        var roleRepository = _unitOfWork.Repository<Domain.Entities.Role>();
         var userExists = await userRepository.ExistsAsync(u => u.Email == Email.Of(request.Email), cancellationToken);
 
         if (userExists) throw new EmailAlreadyExistsException();
@@ -40,6 +43,9 @@ public class CreateUserHandler(IUnitOfWork unitOfWork)
                 Email.Of(request.Email),
                 HashString.Of(request.Password)
             );
+
+            var role = await roleRepository.GetAsync(r => r.Name == DEFAULT_ROLE_NAME, cancellationToken: cancellationToken);
+            if (role is not null) user.AssignRole([role]);
 
             await userRepository.AddAsync(user, cancellationToken);
             await _unitOfWork.CommitAsync();
