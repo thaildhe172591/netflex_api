@@ -3,7 +3,7 @@ using Netflex.Domain.ValueObjects;
 
 namespace Netflex.Application.UseCases.V1.Auth.Commands;
 
-public record SendOtpCommand(string Email) : ICommand;
+public record SendOtpCommand(string Email, bool NeedExists = true) : ICommand;
 
 public class SendOtpCommandValidator
     : AbstractValidator<SendOtpCommand>
@@ -24,7 +24,7 @@ public class SendOtpHandler(IEmailService emailService, IOtpGenerator otpGenerat
     {
         var hasExists = await _unitOfWork.Repository<Domain.Entities.User>()
             .ExistsAsync(u => u.Email == Email.Of(request.Email), cancellationToken);
-        if (!hasExists) throw new UserNotFoundException();
+        if (!hasExists && request.NeedExists) throw new UserNotFoundException();
         var otp = await _otpGenerator.GenerateOtpAsync(request.Email, cancellationToken);
         var company = _emailService.Settings.Company;
         var html = GetOtpEmail(otp, company);

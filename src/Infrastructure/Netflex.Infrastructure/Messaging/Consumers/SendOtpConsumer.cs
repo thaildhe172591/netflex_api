@@ -12,6 +12,6 @@ public class SendOtpConsumer
     public async Task Consume(ConsumeContext<SendOtpCommand> context)
     {
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
-        await sender.Send(context.Message);
+        await sender.Send(context.Message with { NeedExists = false }, context.CancellationToken);
     }
 }
