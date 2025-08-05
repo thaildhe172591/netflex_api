@@ -19,7 +19,7 @@ public class CreateActorEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/actors", async ([FromForm] CreateActorRequest request, ISender sender) =>
-        {
+        {        
             var command = request.Adapt<CreateActorCommand>();
             var result = await sender.Send(command);
             return Results.Ok(result);
