@@ -114,7 +114,7 @@ src/
 1. **Clone repository:**
 
 ```bash
-git clone https://github.com/ngoxuanbac/netflex.git
+git clone https://github.com/thaildhe172591/netflex.git
 cd netflex
 ```
 
@@ -192,7 +192,7 @@ Dự án này được phân phối dưới MIT License. Xem file `LICENSE` đ�
 
 ## 👨‍💻 Tác giả
 
-**Ngô Xuân Bắc** - [ngoxuanbac](https://github.com/ngoxuanbac)
+**Lưu Danh Thái** - [thaildhe172591](https://github.com/thaildhe172591)
 
 ---
 
